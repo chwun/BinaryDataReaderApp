@@ -2,7 +2,13 @@ language: csharp
 mono: none
 sudo: required
 dist: xenial
-dotnet: 3.0
+
+addons:
+  snaps:
+  - name: dotnet-sdk
+    classic: true
+    channel: latest/beta
 
 script:
- - dotnet build src/BinaryDataReader.sln
+  - sudo snap alias dotnet-sdk.dotnet dotnet
+  - dotnet build src/BinaryDataReader.sln
