@@ -29,7 +29,7 @@ namespace BinaryDataReaderApp
 
         private void ReadTemplate()
         {
-            BinaryDataTemplate template = new BinaryDataTemplate("Test-Template", new BinaryDataTemplateXMLProvider(@"C:\tmp\Templates BinaryDataReaderApp\OEEEventsFileTemplate_mitTSF.xml"));
+            BinaryDataTemplate template = new BinaryDataTemplate("Test-Template", new BinaryDataTemplateXMLProvider(@""));
         }
     }
 }
