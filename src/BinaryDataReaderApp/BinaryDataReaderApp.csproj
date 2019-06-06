@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
+  <ItemGroup>
+    <ProjectReference Include="..\BinaryDataReader.Lib\BinaryDataReader.Lib.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>

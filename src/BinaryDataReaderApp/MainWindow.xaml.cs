@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BinaryDataReader.Lib;
 
 namespace BinaryDataReaderApp
 {
@@ -23,6 +24,12 @@ namespace BinaryDataReaderApp
         public MainWindow()
         {
             InitializeComponent();
+            ReadTemplate();
+        }
+
+        private void ReadTemplate()
+        {
+            BinaryDataTemplate template = new BinaryDataTemplate("Test-Template", new BinaryDataTemplateXMLProvider(@"C:\tmp\Templates BinaryDataReaderApp\OEEEventsFileTemplate_mitTSF.xml"));
         }
     }
 }
