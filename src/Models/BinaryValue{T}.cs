@@ -1,10 +1,10 @@
-namespace BinaryDataReader.Lib
+namespace BinaryDataReaderApp.Models
 {
     /// <summary>
     /// Data class representing a value of type T in a binary data template 
     /// </summary>
     /// <typeparam name="T">Value type</typeparam>
-    public class BinaryValue<T> : BinaryPart where T : struct
+    public class BinaryValue<T> : BinaryValue where T : struct
     {
         /// <summary>
         /// Creates new instance of BinaryValue with ID and name

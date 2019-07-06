@@ -1,6 +1,6 @@
-namespace BinaryDataReader.Lib
+namespace BinaryDataReaderApp.Models
 {
-	/// <summary>
+    /// <summary>
 	/// Enum for different loop types of binary parts
 	/// </summary>
 	public enum LoopType
