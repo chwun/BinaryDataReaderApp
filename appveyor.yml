@@ -13,7 +13,7 @@ before_build:
   - cmd: dotnet --version
 build_script:
   # output will be in ./src/bin/debug/netcoreapp1.1/publish
-  - cmd: dotnet build ./src/BinaryDataReader.sln
+  - cmd: dotnet build ./src/BinaryDataReaderApp.csproj
 after_build:
   # For once the build has completed
 artifacts:
@@ -21,8 +21,8 @@ artifacts:
 clone_depth: 1
 test_script:
   # run the unit tests
-  - cmd: dotnet build .\test\BinaryDataReader.Lib.Tests\
-  - cmd: dotnet test .\test\BinaryDataReader.Lib.Tests\
+  #- cmd: dotnet build .\test\BinaryDataReader.Lib.Tests\
+  #- cmd: dotnet test .\test\BinaryDataReader.Lib.Tests\
 on_finish :
   # any cleanup in here
 deploy: off
