@@ -114,32 +114,32 @@ namespace BinaryDataReaderApp.Models
 		{
 			long id = long.Parse(element.Attribute("ID").Value);
 			string name = element.Attribute("Name").Value;
-			string type = element.Attribute("Type").Value;
+			string type = element.Attribute("Type").Value.ToLower();
 
 			switch (type)
 			{
 				case "byte":
-					BinaryValue<byte> binaryValue_byte = new BinaryValue<byte>(id, name);
+					BinaryValue binaryValue_byte = new BinaryValue(id, name, BinaryValueType.BYTE);
 					partsList.Add(binaryValue_byte);
 					break;
 
 				case "short":
-					BinaryValue<short> binaryValue_short = new BinaryValue<short>(id, name);
+					BinaryValue binaryValue_short = new BinaryValue(id, name, BinaryValueType.SHORT);
 					partsList.Add(binaryValue_short);
 					break;
 
 				case "ushort":
-					BinaryValue<ushort> binaryValue_ushort = new BinaryValue<ushort>(id, name);
+					BinaryValue binaryValue_ushort = new BinaryValue(id, name, BinaryValueType.USHORT);
 					partsList.Add(binaryValue_ushort);
 					break;
 
 				case "int":
-					BinaryValue<int> binaryValue_int = new BinaryValue<int>(id, name);
+					BinaryValue binaryValue_int = new BinaryValue(id, name, BinaryValueType.INT);
 					partsList.Add(binaryValue_int);
 					break;
 
 				case "uint":
-					BinaryValue<uint> binaryValue_uint = new BinaryValue<uint>(id, name);
+					BinaryValue binaryValue_uint = new BinaryValue(id, name, BinaryValueType.UINT);
 					partsList.Add(binaryValue_uint);
 					break;
 

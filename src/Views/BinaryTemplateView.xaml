@@ -4,18 +4,66 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:local="clr-namespace:BinaryDataReaderApp" 
+	xmlns:system="clr-namespace:System;assembly=mscorlib" 
+	xmlns:controls="clr-namespace:BinaryDataReaderApp.Controls" 
+	xmlns:converters="clr-namespace:BinaryDataReaderApp.Converters"
 	xmlns:models="clr-namespace:BinaryDataReaderApp.Models" mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
 
-	<StackPanel>
-		<TreeView ItemsSource="{Binding BinaryTemplate.Parts}">
+	<UserControl.Resources>
+		<ObjectDataProvider x:Key="binaryValueTypeEnum" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+			<ObjectDataProvider.MethodParameters>
+				<x:Type TypeName="models:BinaryValueType"/>
+			</ObjectDataProvider.MethodParameters>
+		</ObjectDataProvider>
+
+		<converters:BinaryValueTypeToBooleanConverter x:Key="binaryValueTypeToBooleanConverter" />
+		<converters:BinarySectionTypeToBooleanConverter x:Key="binarySectionTypeToBooleanConverter" />
+	</UserControl.Resources>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="3*" />
+			<ColumnDefinition Width="1*" />
+		</Grid.ColumnDefinitions>
+
+		<controls:CustomTreeView Grid.Row="0" Grid.Column="0" SelectedTreeItem="{Binding SelectedPart}" ItemsSource="{Binding BinaryTemplate.Parts}">
 			<TreeView.Resources>
 				<HierarchicalDataTemplate DataType="{x:Type models:BinarySection}" ItemsSource="{Binding Parts}">
 					<TextBlock Text="{Binding Name}" />
 				</HierarchicalDataTemplate>
 				<DataTemplate DataType="{x:Type models:BinaryValue}">
-					<TextBlock Text="{Binding Name}" />
+					<TextBlock>
+						<Run Text="{Binding Name}" />
+						<Run Text=" : " />
+						<Run Text="{Binding ValueType}" FontWeight="bold" />
+					</TextBlock>
 				</DataTemplate>
 			</TreeView.Resources>
-		</TreeView>
-	</StackPanel>
+		</controls:CustomTreeView>
+
+		<Grid Grid.Row="0" Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="5" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Content="{DynamicResource BinaryTemplateProperties_Header}" />
+
+			<Label Grid.Row="1" Grid.Column="0" Content="{DynamicResource BinaryTemplateProperties_Name}" />
+			<TextBox Grid.Row="1" Grid.Column="2" Text="{Binding SelectedPart.Name}" />
+
+			<Label Grid.Row="2" Grid.Column="0" Content="{DynamicResource BinaryTemplateProperties_Type}" IsEnabled="{Binding Path=SelectedPart, Converter={StaticResource binaryValueTypeToBooleanConverter}}" />
+			<ComboBox Grid.Row="2" Grid.Column="2" ItemsSource="{Binding Source={StaticResource binaryValueTypeEnum}}" SelectedItem="{Binding SelectedPart.ValueType}" IsEnabled="{Binding Path=SelectedPart, Converter={StaticResource binaryValueTypeToBooleanConverter}}" />
+		</Grid>
+	</Grid>
 </UserControl>

@@ -5,6 +5,7 @@ namespace BinaryDataReaderApp.ViewModels
 	public class BinaryTemplateTabViewModel : TabViewModelBase
 	{
 		private BinaryDataTemplate binaryTemplate;
+		private BinaryPart selectedPart;
 
 		public BinaryDataTemplate BinaryTemplate
 		{
@@ -15,6 +16,19 @@ namespace BinaryDataReaderApp.ViewModels
 			set
 			{
 				binaryTemplate = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public BinaryPart SelectedPart
+		{
+			get
+			{
+				return selectedPart;
+			}
+			set
+			{
+				selectedPart = value;
 				OnPropertyChanged();
 			}
 		}

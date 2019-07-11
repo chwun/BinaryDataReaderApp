@@ -1,15 +1,32 @@
 namespace BinaryDataReaderApp.Models
 {
-	public abstract class BinaryValue : BinaryPart
+	public class BinaryValue : BinaryPart
 	{
+		private BinaryValueType valueType;
+
+		public BinaryValueType ValueType
+		{
+			get
+			{
+				return valueType;
+			}
+			set
+			{
+				valueType = value;
+				OnPropertyChanged();
+			}
+		}
+
 		/// <summary>
 		/// Creates new instance of BinaryValue with ID and name
 		/// </summary>
 		/// <param name="id">ID of this value</param>
 		/// <param name="name">Name of this value</param>
-		public BinaryValue(long id, string name)
+		/// <param name="valueType">Type of this value</param>
+		public BinaryValue(long id, string name, BinaryValueType valueType)
 		: base(id, name)
 		{
+			ValueType = valueType;
 		}
 	}
 }

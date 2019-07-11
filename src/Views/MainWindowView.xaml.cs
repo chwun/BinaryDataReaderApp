@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading;
 using System.Windows;
+using BinaryDataReaderApp.Localization;
 using BinaryDataReaderApp.ViewModels;
 using Microsoft.Win32;
 
@@ -18,7 +20,7 @@ namespace BinaryDataReaderApp.Views
 		{
 			InitializeComponent();
 
-			Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-US"); // TODO?
+			TranslationManager.Instance.SetLanguage(CultureInfo.GetCultureInfo("de-DE"));
 
 			ViewModel = new MainViewModel();
 			DataContext = ViewModel;
