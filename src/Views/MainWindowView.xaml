@@ -3,29 +3,53 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-	xmlns:local="clr-namespace:BinaryDataReaderApp"
-	xmlns:views="clr-namespace:BinaryDataReaderApp.Views"
-	xmlns:common="clr-namespace:BinaryDataReaderApp.Common"
-	mc:Ignorable="d" Title="MainWindow" Height="450" Width="800" MinHeight="450" MinWidth="500">
+	xmlns:local="clr-namespace:BinaryDataReaderApp" 
+	xmlns:views="clr-namespace:BinaryDataReaderApp.Views" 
+	xmlns:common="clr-namespace:BinaryDataReaderApp.Common" mc:Ignorable="d" Title="MainWindow" Height="450" Width="800" MinHeight="450" MinWidth="500">
 
 	<Grid Margin="5">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="30" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="3" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*" />
 		</Grid.ColumnDefinitions>
 
-		<StackPanel Grid.Row="0" Orientation="Horizontal">
-			<Button Command="{Binding NewTemplateCommand}" Content="New template" />
-			<Button Command="{Binding LoadTemplateCommand}" Content="Load template" />
-		</StackPanel>
+		<Menu Grid.Row="0">
+			<MenuItem Header="{DynamicResource MainMenu_File}">
+				<MenuItem Header="{DynamicResource MainMenu_File_OpenBinary}" Command="{Binding OpenBinaryCommand}" />
+				<Separator />
+				<MenuItem Header="{DynamicResource MainMenu_File_NewTemplate}" Command="{Binding NewTemplateCommand}" />
+				<MenuItem Header="{DynamicResource MainMenu_File_OpenTemplate}" Command="{Binding LoadTemplateCommand}" />
+				<Separator />
+				<MenuItem Header="{DynamicResource MainMenu_File_Close}" Command="{Binding CloseCommand}" />
+			</MenuItem>
+		</Menu>
 
-		<TabControl Grid.Row="1" ItemsSource="{Binding TabVMs}" Name="tabControl" >
+		<TabControl Grid.Row="2" ItemsSource="{Binding TabVMs}" Name="tabControl" SelectedIndex="{Binding SelectedTabIndex}">
 			<TabControl.ItemTemplate>
 				<DataTemplate>
-					<TextBlock Text="{Binding Header}" />
+					<Grid Width="120">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="3" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+
+						<TextBlock Grid.Column="0" Text="{Binding Header}" FontSize="14" VerticalAlignment="Center" />
+						<Button Grid.Column="2" Command="{Binding Path=DataContext.CloseTabCommand, ElementName=tabControl}" CommandParameter="{Binding}">
+							<Button.Template>
+								<ControlTemplate>
+									<Label FontWeight="Bold" Content="X" FontSize="14" />
+								</ControlTemplate>
+							</Button.Template>
+						</Button>
+					</Grid>
 				</DataTemplate>
 			</TabControl.ItemTemplate>
 			<TabControl.ContentTemplateSelector>

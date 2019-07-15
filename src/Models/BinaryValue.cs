@@ -3,6 +3,7 @@ namespace BinaryDataReaderApp.Models
 	public class BinaryValue : BinaryPart
 	{
 		private BinaryValueType valueType;
+		private object value;
 
 		public BinaryValueType ValueType
 		{
@@ -13,6 +14,19 @@ namespace BinaryDataReaderApp.Models
 			set
 			{
 				valueType = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public object Value
+		{
+			get
+			{
+				return value;
+			}
+			set
+			{
+				this.value = value;
 				OnPropertyChanged();
 			}
 		}

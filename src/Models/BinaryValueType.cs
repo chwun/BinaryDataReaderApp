@@ -6,6 +6,8 @@ namespace BinaryDataReaderApp.Models
 		SHORT,
 		USHORT,
 		INT,
-		UINT
+		UINT,
+		LONG,
+		ULONG
 	}
 }

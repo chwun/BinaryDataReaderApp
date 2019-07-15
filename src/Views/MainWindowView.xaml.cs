@@ -20,12 +20,13 @@ namespace BinaryDataReaderApp.Views
 		{
 			InitializeComponent();
 
-			TranslationManager.Instance.SetLanguage(CultureInfo.GetCultureInfo("de-DE"));
+			TranslationManager.Instance.SetLanguage(CultureInfo.GetCultureInfo("en-US")); // TODO - Workaround für Bug TabControl!!!
 
 			ViewModel = new MainViewModel();
 			DataContext = ViewModel;
 
 			ViewModel.FileDialogRequested += OnFileDialogRequested;
+			ViewModel.CloseRequested += OnCloseRequested;
 		}
 
 		private void OnFileDialogRequested(object sender, FileDialogEventArgs e)
@@ -39,6 +40,11 @@ namespace BinaryDataReaderApp.Views
 			{
 				e.File = dlg.FileName;
 			}
+		}
+
+		private void OnCloseRequested(object sender, EventArgs e)
+		{
+			Close();
 		}
 	}
 }
