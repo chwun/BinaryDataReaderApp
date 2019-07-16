@@ -4,6 +4,7 @@ namespace BinaryDataReaderApp.Models
 	{
 		private BinaryValueType valueType;
 		private object value;
+		private int byteOffset;
 
 		public BinaryValueType ValueType
 		{
@@ -27,6 +28,19 @@ namespace BinaryDataReaderApp.Models
 			set
 			{
 				this.value = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public int ByteOffset
+		{
+			get
+			{
+				return byteOffset;
+			}
+			set
+			{
+				byteOffset = value;
 				OnPropertyChanged();
 			}
 		}

@@ -5,7 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:local="clr-namespace:BinaryDataReaderApp" 
 	xmlns:views="clr-namespace:BinaryDataReaderApp.Views" WindowStartupLocation="CenterScreen" 
-	xmlns:common="clr-namespace:BinaryDataReaderApp.Common" mc:Ignorable="d" Title="BinaryDataReader - v00.01" Height="450" Width="800" MinHeight="450" MinWidth="500">
+	xmlns:common="clr-namespace:BinaryDataReaderApp.Common" mc:Ignorable="d" Title="BinaryDataReader - v00.02" Height="450" Width="800" MinHeight="450" MinWidth="500">
 
 	<Window.InputBindings>
 		<KeyBinding Command="{Binding OpenBinaryFileCommand}" Gesture="Ctrl+B" />
