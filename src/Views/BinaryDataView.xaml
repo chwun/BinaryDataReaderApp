@@ -3,10 +3,33 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	xmlns:controls="clr-namespace:BinaryDataReaderApp.Controls" 
+	xmlns:models="clr-namespace:BinaryDataReaderApp.Models"
 	xmlns:local="clr-namespace:BinaryDataReaderApp" mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
-	<StackPanel>
-		<TextBlock Text="Binary DATA!" />
-		<TextBlock Text="test" />
-		<TextBlock FontWeight="Bold" Text="{Binding Header}" />
-	</StackPanel>
+	
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+
+		<controls:CustomTreeView Grid.Row="0" Grid.Column="0" SelectedTreeItem="{Binding SelectedPart}" ItemsSource="{Binding BinaryFile.Parts}">
+			<TreeView.Resources>
+				<HierarchicalDataTemplate DataType="{x:Type models:BinarySection}" ItemsSource="{Binding Parts}">
+					<TextBlock Text="{Binding Name}" />
+				</HierarchicalDataTemplate>
+				<DataTemplate DataType="{x:Type models:BinaryValue}">
+					<TextBlock>
+						<Run Text="{Binding Name}" />
+						<Run Text=" = " />
+						<Run Text="{Binding Value}" />
+						<Run Text=" : " />
+						<Run Text="{Binding ValueType}" FontWeight="bold" />
+					</TextBlock>
+				</DataTemplate>
+			</TreeView.Resources>
+		</controls:CustomTreeView>
+	</Grid>
 </UserControl>

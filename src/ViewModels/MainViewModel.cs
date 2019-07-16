@@ -1,220 +1,276 @@
 using System;
+using System.IO;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using BinaryDataReaderApp.Common;
 using BinaryDataReaderApp.Models;
+using BinaryDataReaderApp.Localization;
 
 namespace BinaryDataReaderApp.ViewModels
 {
-	public class MainViewModel : ViewModelBase
-	{
-		private ObservableCollection<TabViewModelBase> tabVMs;
-		private int selectedTabIndex;
+    public class MainViewModel : ViewModelBase
+    {
+        private ObservableCollection<TabViewModelBase> tabVMs;
+        private int selectedTabIndex;
 
-		public ObservableCollection<TabViewModelBase> TabVMs
-		{
-			get
-			{
-				return tabVMs;
-			}
-			set
-			{
-				tabVMs = value;
-				OnPropertyChanged();
-			}
-		}
+        public ObservableCollection<TabViewModelBase> TabVMs
+        {
+            get
+            {
+                return tabVMs;
+            }
+            set
+            {
+                tabVMs = value;
+                OnPropertyChanged();
+            }
+        }
 
-		public int SelectedTabIndex
-		{
-			get
-			{
-				return selectedTabIndex;
-			}
-			set
-			{
-				selectedTabIndex = value;
-				OnPropertyChanged();
-			}
-		}
+        public int SelectedTabIndex
+        {
+            get
+            {
+                return selectedTabIndex;
+            }
+            set
+            {
+                selectedTabIndex = value;
+                OnPropertyChanged();
+            }
+        }
 
-		#region events
+        #region events
 
-		public delegate void FileDialogRequestedEventHandler(object sender, FileDialogEventArgs e);
-		public delegate void CloseRequestedEventHandler(object sender, EventArgs e);
+        public delegate void FileDialogRequestedEventHandler(object sender, FileDialogEventArgs e);
+        public delegate void CloseRequestedEventHandler(object sender, EventArgs e);
+        public delegate void OpenBinaryFileWindowRequestedEventHandler(object sender, OpenBinaryFileWindowEventArgs e);
 
-		public event FileDialogRequestedEventHandler FileDialogRequested;
-		public event CloseRequestedEventHandler CloseRequested;
+        public event FileDialogRequestedEventHandler FileDialogRequested;
+        public event CloseRequestedEventHandler CloseRequested;
+        public event OpenBinaryFileWindowRequestedEventHandler OpenBinaryFileWindowRequested;
 
-		#endregion
+        #endregion
 
-		public MainViewModel()
-		{
-			TabVMs = new ObservableCollection<TabViewModelBase>();
-		}
+        public MainViewModel()
+        {
+            TabVMs = new ObservableCollection<TabViewModelBase>();
+        }
 
-		#region commands
+        #region commands
 
-		private ICommand newTemplateCommand;
-		public ICommand NewTemplateCommand
-		{
-			get
-			{
-				if (newTemplateCommand == null)
-				{
-					newTemplateCommand = new ActionCommand(NewTemplateCommand_Executed, NewTemplateCommand_CanExecute);
-				}
+        private ICommand newTemplateCommand;
+        public ICommand NewTemplateCommand
+        {
+            get
+            {
+                if (newTemplateCommand == null)
+                {
+                    newTemplateCommand = new ActionCommand(NewTemplateCommand_Executed, NewTemplateCommand_CanExecute);
+                }
 
-				return newTemplateCommand;
-			}
-		}
+                return newTemplateCommand;
+            }
+        }
 
-		private ICommand loadTemplateCommand;
-		public ICommand LoadTemplateCommand
-		{
-			get
-			{
-				if (loadTemplateCommand == null)
-				{
-					loadTemplateCommand = new ActionCommand(LoadTemplateCommand_Executed, LoadTemplateCommand_CanExecute);
-				}
+        private ICommand loadTemplateCommand;
+        public ICommand LoadTemplateCommand
+        {
+            get
+            {
+                if (loadTemplateCommand == null)
+                {
+                    loadTemplateCommand = new ActionCommand(LoadTemplateCommand_Executed, LoadTemplateCommand_CanExecute);
+                }
 
-				return loadTemplateCommand;
-			}
-		}
+                return loadTemplateCommand;
+            }
+        }
 
-		private ICommand openBinaryCommand;
-		public ICommand OpenBinaryCommand
-		{
-			get
-			{
-				if (openBinaryCommand == null)
-				{
-					openBinaryCommand = new ActionCommand(OpenBinaryCommand_Executed, OpenBinaryCommand_CanExecute);
-				}
+        private ICommand openBinaryFileCommand;
+        public ICommand OpenBinaryFileCommand
+        {
+            get
+            {
+                if (openBinaryFileCommand == null)
+                {
+                    openBinaryFileCommand = new ActionCommand(OpenBinaryFileCommand_Executed, OpenBinaryFileCommand_CanExecute);
+                }
 
-				return openBinaryCommand;
-			}
-		}
+                return openBinaryFileCommand;
+            }
+        }
 
-		private ICommand closeTabCommand;
-		public ICommand CloseTabCommand
-		{
-			get
-			{
-				if (closeTabCommand == null)
-				{
-					closeTabCommand = new ActionCommand(CloseTabCommand_Executed, CloseTabCommand_CanExecute);
-				}
+        private ICommand closeTabCommand;
+        public ICommand CloseTabCommand
+        {
+            get
+            {
+                if (closeTabCommand == null)
+                {
+                    closeTabCommand = new ActionCommand(CloseTabCommand_Executed, CloseTabCommand_CanExecute);
+                }
 
-				return closeTabCommand;
-			}
-		}
+                return closeTabCommand;
+            }
+        }
 
-		private ICommand closeCommand;
-		public ICommand CloseCommand
-		{
-			get
-			{
-				if (closeCommand == null)
-				{
-					closeCommand = new ActionCommand(CloseCommand_Executed, CloseCommand_CanExecute);
-				}
+        private ICommand closeCommand;
+        public ICommand CloseCommand
+        {
+            get
+            {
+                if (closeCommand == null)
+                {
+                    closeCommand = new ActionCommand(CloseCommand_Executed, CloseCommand_CanExecute);
+                }
 
-				return closeCommand;
-			}
-		}
+                return closeCommand;
+            }
+        }
 
 
-		#endregion
+        #endregion
 
-		#region command handlers
-		private bool NewTemplateCommand_CanExecute(object parameter)
-		{
-			return true;
-		}
+        #region command handlers
+        private bool NewTemplateCommand_CanExecute(object parameter)
+        {
+            return true;
+        }
 
-		private void NewTemplateCommand_Executed(object parameter)
-		{
-			var newTab = new BinaryTemplateTabViewModel("new template");
-			AddNewTab(newTab);
-		}
+        private void NewTemplateCommand_Executed(object parameter)
+        {
+            var newTab = new BinaryTemplateTabViewModel("new template");
+            AddNewTab(newTab);
+        }
 
-		private bool LoadTemplateCommand_CanExecute(object parameter)
-		{
-			return true;
-		}
+        private bool LoadTemplateCommand_CanExecute(object parameter)
+        {
+            return true;
+        }
 
-		private void LoadTemplateCommand_Executed(object parameter)
-		{
-			FileDialogEventArgs fileDialogEventArgs = new FileDialogEventArgs();
-			FileDialogRequested?.Invoke(this, fileDialogEventArgs);
+        private void LoadTemplateCommand_Executed(object parameter)
+        {
+            FileDialogEventArgs fileDialogEventArgs = new FileDialogEventArgs()
+            {
+                Title = TranslationManager.Instance.GetResourceText("SelectTemplate"),
+                Filter = TranslationManager.Instance.GetResourceText("FileDialogFilter_Templates") + " (*.xml)|*.xml"
+            };
 
-			if (!string.IsNullOrWhiteSpace(fileDialogEventArgs.File))
-			{
-				BinaryTemplateTabViewModel loadedTemplate = new BinaryTemplateTabViewModel("loaded template");
+            FileDialogRequested?.Invoke(this, fileDialogEventArgs);
 
-				if (loadedTemplate.LoadTemplateFromFile(fileDialogEventArgs.File))
-				{
-					AddNewTab(loadedTemplate);
-				}
-				else
-				{
-					// TODO!
-				}
-			}
-		}
+            if (!string.IsNullOrWhiteSpace(fileDialogEventArgs.File))
+            {
+                BinaryTemplateTabViewModel loadedTemplate = new BinaryTemplateTabViewModel("loaded template");
 
-		private bool OpenBinaryCommand_CanExecute(object parameter)
-		{
-			return true;
-		}
+                if (loadedTemplate.LoadTemplateFromFile(fileDialogEventArgs.File))
+                {
+                    AddNewTab(loadedTemplate);
+                }
+                else
+                {
+                    // TODO!
+                }
+            }
+        }
 
-		private void OpenBinaryCommand_Executed(object parameter)
-		{
-			string file = "";
-			BinaryDataTemplate template = null;
-			var newTab = new BinaryDataTabViewModel("binary file", file, template);
-			AddNewTab(newTab);
-		}
+        private bool OpenBinaryFileCommand_CanExecute(object parameter)
+        {
+            return true;
+        }
 
-		private bool CloseTabCommand_CanExecute(object parameter)
-		{
-			return true;
-		}
+        private void OpenBinaryFileCommand_Executed(object parameter)
+        {
+            // select binary file:
+            FileDialogEventArgs fileDialogBinaryEventArgs = new FileDialogEventArgs()
+            {
+                Title = TranslationManager.Instance.GetResourceText("SelectBinaryFile"),
+                Filter = TranslationManager.Instance.GetResourceText("FileDialogFilter_Binary") + " (*.*)|*.*"
+            };
 
-		private void CloseTabCommand_Executed(object parameter)
-		{
-			CloseTab(parameter as TabViewModelBase);
-		}
+            FileDialogRequested?.Invoke(this, fileDialogBinaryEventArgs);
 
-		private bool CloseCommand_CanExecute(object parameter)
-		{
-			return true;
-		}
+            string binaryFile = fileDialogBinaryEventArgs.File;
+            if (!string.IsNullOrWhiteSpace(binaryFile))
+            {
+                // select template:
+                FileDialogEventArgs fileDialogTemplateEventArgs = new FileDialogEventArgs()
+                {
+                    Title = TranslationManager.Instance.GetResourceText("SelectTemplate"),
+                    Filter = TranslationManager.Instance.GetResourceText("FileDialogFilter_Templates") + " (*.xml)|*.xml"
+                };
 
-		private void CloseCommand_Executed(object parameter)
-		{
-			CloseRequested?.Invoke(this, new EventArgs());
-		}
+                FileDialogRequested?.Invoke(this, fileDialogTemplateEventArgs);
 
-		#endregion
+                string templateFile = fileDialogTemplateEventArgs.File;
+                if (!string.IsNullOrWhiteSpace(templateFile))
+                {
+                    string tabHeader = "";
+                    try
+                    {
+                        tabHeader = Path.GetFileName(binaryFile);
+                    }
+                    catch
+                    {
+                        tabHeader = binaryFile;
+                    }
 
-		#region private methods
+                    var newTab = new BinaryDataTabViewModel(tabHeader, binaryFile, templateFile);
+                    AddNewTab(newTab);
+                }
+            }
 
-		private void AddNewTab(TabViewModelBase tab)
-		{
-			TabVMs.Add(tab);
-			SelectedTabIndex = TabVMs.Count - 1;
-		}
+            // TODO: stattdessen eigener Dialog zur Auswahl von Binärdatei und Template!
 
-		private void CloseTab(TabViewModelBase tab)
-		{
-			if (tab != null)
-			{
-				TabVMs.Remove(tab);
-			}
-		}
+            // OpenBinaryFileWindowEventArgs eventArgs = new OpenBinaryFileWindowEventArgs()
+            // OpenBinaryFileWindowRequested?.Invoke(this, eventArgs);
 
-		#endregion
-	}
+            // if (eventArgs.DialogResult)
+            // {
+            //     string binaryFile = eventArgs.BinaryFilePath;
+            // 	string templateFile = eventArgs.TemplatePath;
+            //     var newTab = new BinaryDataTabViewModel("binary file", binaryFile, templateFile);
+            //     AddNewTab(newTab);
+            // }
+        }
+
+        private bool CloseTabCommand_CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        private void CloseTabCommand_Executed(object parameter)
+        {
+            CloseTab(parameter as TabViewModelBase);
+        }
+
+        private bool CloseCommand_CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        private void CloseCommand_Executed(object parameter)
+        {
+            CloseRequested?.Invoke(this, null);
+        }
+
+        #endregion
+
+        #region private methods
+
+        private void AddNewTab(TabViewModelBase tab)
+        {
+            TabVMs.Add(tab);
+            SelectedTabIndex = TabVMs.Count - 1;
+        }
+
+        private void CloseTab(TabViewModelBase tab)
+        {
+            if (tab != null)
+            {
+                TabVMs.Remove(tab);
+            }
+        }
+
+        #endregion
+    }
 }

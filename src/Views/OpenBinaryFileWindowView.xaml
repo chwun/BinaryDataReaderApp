@@ -1,0 +1,34 @@
+<Window x:Class="BinaryDataReaderApp.Views.OpenBinaryFileWindowView" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:local="clr-namespace:BinaryDataReaderApp" 
+    xmlns:views="clr-namespace:BinaryDataReaderApp.Views" 
+    xmlns:common="clr-namespace:BinaryDataReaderApp.Common" mc:Ignorable="d" Title="" Height="450" Width="800" MinHeight="450" MinWidth="500" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="{DynamicResource Dialog_Open}" MinWidth="120" IsDefault="True" Command="{Binding OkCommand}" Margin="0,0,40,0" />
+            <Button Content="{DynamicResource Dialog_Cancel}" MinWidth="120" IsCancel="True" Margin="0,0,0,0" />
+        </StackPanel>
+
+    </Grid>
+</Window>

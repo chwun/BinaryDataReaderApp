@@ -8,6 +8,7 @@ namespace BinaryDataReaderApp.Models
 		INT,
 		UINT,
 		LONG,
-		ULONG
+		ULONG,
+		BOOL
 	}
 }

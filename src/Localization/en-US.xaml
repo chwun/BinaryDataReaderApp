@@ -12,4 +12,12 @@
 	<system:String x:Key="BinaryTemplateProperties_Name">Name</system:String>
 	<system:String x:Key="BinaryTemplateProperties_Type">Datentyp</system:String>
 
+	<system:String x:Key="Dialog_Open">Öffnen</system:String>
+	<system:String x:Key="Dialog_Cancel">Abbrechen</system:String>
+
+	<system:String x:Key="SelectTemplate">Template auswählen</system:String>
+	<system:String x:Key="SelectBinaryFile">Binärdatei auswählen</system:String>
+	<system:String x:Key="FileDialogFilter_Templates">Templates</system:String>
+	<system:String x:Key="FileDialogFilter_Binary">Binärdateien</system:String>
+
 </ResourceDictionary>

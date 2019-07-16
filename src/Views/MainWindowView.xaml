@@ -4,8 +4,12 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:local="clr-namespace:BinaryDataReaderApp" 
-	xmlns:views="clr-namespace:BinaryDataReaderApp.Views" 
-	xmlns:common="clr-namespace:BinaryDataReaderApp.Common" mc:Ignorable="d" Title="MainWindow" Height="450" Width="800" MinHeight="450" MinWidth="500">
+	xmlns:views="clr-namespace:BinaryDataReaderApp.Views" WindowStartupLocation="CenterScreen" 
+	xmlns:common="clr-namespace:BinaryDataReaderApp.Common" mc:Ignorable="d" Title="BinaryDataReader - v00.01" Height="450" Width="800" MinHeight="450" MinWidth="500">
+
+	<Window.InputBindings>
+		<KeyBinding Command="{Binding OpenBinaryFileCommand}" Gesture="Ctrl+B" />
+	</Window.InputBindings>
 
 	<Grid Margin="5">
 		<Grid.RowDefinitions>
@@ -19,7 +23,7 @@
 
 		<Menu Grid.Row="0">
 			<MenuItem Header="{DynamicResource MainMenu_File}">
-				<MenuItem Header="{DynamicResource MainMenu_File_OpenBinary}" Command="{Binding OpenBinaryCommand}" />
+				<MenuItem Header="{DynamicResource MainMenu_File_OpenBinary}" Command="{Binding OpenBinaryFileCommand}" />
 				<Separator />
 				<MenuItem Header="{DynamicResource MainMenu_File_NewTemplate}" Command="{Binding NewTemplateCommand}" />
 				<MenuItem Header="{DynamicResource MainMenu_File_OpenTemplate}" Command="{Binding LoadTemplateCommand}" />
@@ -29,29 +33,57 @@
 		</Menu>
 
 		<TabControl Grid.Row="2" ItemsSource="{Binding TabVMs}" Name="tabControl" SelectedIndex="{Binding SelectedTabIndex}">
-			<TabControl.ItemTemplate>
-				<DataTemplate>
-					<Grid Width="120">
-						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto" />
-						</Grid.RowDefinitions>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="*" />
-							<ColumnDefinition Width="3" />
-							<ColumnDefinition Width="Auto" />
-						</Grid.ColumnDefinitions>
+			<TabControl.ItemTemplateSelector>
+				<common:TabItemTemplateSelector>
+					<common:TabItemTemplateSelector.TabTemplate_BinaryTemplate>
+						<DataTemplate>
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto" />
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="3" />
+									<ColumnDefinition Width="Auto" />
+								</Grid.ColumnDefinitions>
 
-						<TextBlock Grid.Column="0" Text="{Binding Header}" FontSize="14" VerticalAlignment="Center" />
-						<Button Grid.Column="2" Command="{Binding Path=DataContext.CloseTabCommand, ElementName=tabControl}" CommandParameter="{Binding}">
-							<Button.Template>
-								<ControlTemplate>
-									<Label FontWeight="Bold" Content="X" FontSize="14" />
-								</ControlTemplate>
-							</Button.Template>
-						</Button>
-					</Grid>
-				</DataTemplate>
-			</TabControl.ItemTemplate>
+								<TextBlock Grid.Column="0" Text="{Binding Header}" FontSize="14" VerticalAlignment="Center" ToolTip="{Binding Header}" />
+								<Button Grid.Column="2" Command="{Binding Path=DataContext.CloseTabCommand, ElementName=tabControl}" CommandParameter="{Binding}">
+									<Button.Template>
+										<ControlTemplate>
+											<Label FontWeight="Bold" Content="X" FontSize="14" />
+										</ControlTemplate>
+									</Button.Template>
+								</Button>
+							</Grid>
+						</DataTemplate>
+					</common:TabItemTemplateSelector.TabTemplate_BinaryTemplate>
+					<common:TabItemTemplateSelector.TabTemplate_BinaryData>
+						<DataTemplate>
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto" />
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="3" />
+									<ColumnDefinition Width="Auto" />
+								</Grid.ColumnDefinitions>
+
+								<TextBlock Grid.Column="0" Text="{Binding Header}" FontSize="14" Foreground="Blue" VerticalAlignment="Center" ToolTip="{Binding BinaryFilePath}" />
+								<Button Grid.Column="2" Command="{Binding Path=DataContext.CloseTabCommand, ElementName=tabControl}" CommandParameter="{Binding}">
+									<Button.Template>
+										<ControlTemplate>
+											<Label FontWeight="Bold" Content="X" FontSize="14" />
+										</ControlTemplate>
+									</Button.Template>
+								</Button>
+							</Grid>
+						</DataTemplate>
+					</common:TabItemTemplateSelector.TabTemplate_BinaryData>
+				</common:TabItemTemplateSelector>
+			</TabControl.ItemTemplateSelector>
+
 			<TabControl.ContentTemplateSelector>
 				<common:TabItemTemplateSelector>
 					<common:TabItemTemplateSelector.TabTemplate_BinaryTemplate>

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace BinaryDataReaderApp.Models
 {
@@ -6,23 +7,48 @@ namespace BinaryDataReaderApp.Models
 	/// Data class representing a section (e.g. struct) in a binary data template
 	/// </summary>
 	public class BinarySection : BinaryPart
-	{
-		/// <summary>
-		/// Loop settings for this section
-		/// </summary>
-		public LoopSettings LoopSettings { get; set; }
+    {
+        private LoopSettings loopSettings;
+        private ObservableCollection<BinaryPart> parts;
 
-		public List<BinaryPart> Parts { get; set; }
+        /// <summary>
+        /// Loop settings for this section
+        /// </summary>
+        public LoopSettings LoopSettings
+        {
+            get
+            {
+                return loopSettings;
+            }
+            set
+            {
+                loopSettings = value;
+                OnPropertyChanged();
+            }
+        }
 
-		/// <summary>
-		/// Creates new instance of BinarySection with ID and name
-		/// </summary>
-		/// <param name="id">ID of this value</param>
-		/// <param name="name">Name of this value</param>
-		public BinarySection(long id, string name)
-		 : base(id, name)
-		{
-			Parts = new List<BinaryPart>();
-		}
-	}
+        public ObservableCollection<BinaryPart> Parts
+        {
+            get
+            {
+                return parts;
+            }
+            set
+            {
+                parts = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Creates new instance of BinarySection with ID and name
+        /// </summary>
+        /// <param name="id">ID of this value</param>
+        /// <param name="name">Name of this value</param>
+        public BinarySection(long id, string name)
+         : base(id, name)
+        {
+            Parts = new ObservableCollection<BinaryPart>();
+        }
+    }
 }
