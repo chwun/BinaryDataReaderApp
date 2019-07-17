@@ -1,3 +1,5 @@
+using BinaryDataReaderApp.Localization;
+
 namespace BinaryDataReaderApp.Models
 {
 	public class BinaryValue : BinaryPart
@@ -42,6 +44,18 @@ namespace BinaryDataReaderApp.Models
 			{
 				byteOffset = value;
 				OnPropertyChanged();
+				OnPropertyChanged(nameof(DescriptionText));
+			}
+		}
+
+		public string DescriptionText
+		{
+			get
+			{
+				string text = TranslationManager.Instance.GetResourceText("BinaryFile_ByteOffset");
+				text += ": ";
+				text += ByteOffset;
+				return text;
 			}
 		}
 

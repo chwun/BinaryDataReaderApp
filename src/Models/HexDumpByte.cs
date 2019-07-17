@@ -1,3 +1,6 @@
+using System;
+using BinaryDataReaderApp.Localization;
+
 namespace BinaryDataReaderApp.Models
 {
 	public class HexDumpByte : ModelBase
@@ -29,6 +32,18 @@ namespace BinaryDataReaderApp.Models
 			{
 				byteOffset = value;
 				OnPropertyChanged();
+				OnPropertyChanged(nameof(DescriptionText));
+			}
+		}
+
+		public string DescriptionText
+		{
+			get
+			{
+				string text = TranslationManager.Instance.GetResourceText("BinaryFile_ByteOffset");
+				text += ": ";
+				text += ByteOffset;
+				return text;
 			}
 		}
 
@@ -40,8 +55,11 @@ namespace BinaryDataReaderApp.Models
 			}
 			set
 			{
-				isSelected = value;
-				OnPropertyChanged();
+				if (value != isSelected)
+				{
+					isSelected = value;
+					OnPropertyChanged();
+				}
 			}
 		}
 
@@ -51,5 +69,7 @@ namespace BinaryDataReaderApp.Models
 			ByteOffset = byteOffset;
 			IsSelected = false;
 		}
+
+		public static HexDumpByte UnusedByte = new HexDumpByte("--", 0);
 	}
 }

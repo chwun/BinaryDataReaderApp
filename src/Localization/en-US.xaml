@@ -20,4 +20,7 @@
 	<system:String x:Key="FileDialogFilter_Templates">Templates</system:String>
 	<system:String x:Key="FileDialogFilter_Binary">Binärdateien</system:String>
 
+	<system:String x:Key="BinaryFile_ByteOffset">Byte-Offset</system:String>
+	<system:String x:Key="BinaryFile_Value">Wert</system:String>
+
 </ResourceDictionary>

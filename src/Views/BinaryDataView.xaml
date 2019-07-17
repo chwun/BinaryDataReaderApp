@@ -7,75 +7,60 @@
 	xmlns:models="clr-namespace:BinaryDataReaderApp.Models" 
 	xmlns:local="clr-namespace:BinaryDataReaderApp" mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
 
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="../Resources/Styles.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="Auto" />
 		</Grid.ColumnDefinitions>
 
-		<ScrollViewer VerticalScrollBarVisibility="Visible">
-			<Grid>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="*" />
-				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="Auto" />
-				</Grid.ColumnDefinitions>
+		<controls:CustomTreeView Grid.Row="0" Grid.Column="0" SelectedTreeItem="{Binding SelectedPart}" ItemsSource="{Binding BinaryFile.Parts}" Padding="5">
+			<TreeView.Resources>
+				<HierarchicalDataTemplate DataType="{x:Type models:BinarySection}" ItemsSource="{Binding Parts}">
+					<TextBlock Text="{Binding Name}" />
+				</HierarchicalDataTemplate>
+				<DataTemplate DataType="{x:Type models:BinaryValue}">
+					<TextBlock ToolTip="{Binding DescriptionText}">
+						<Run Text="{Binding Name}" />
+						<Run Text=" = " />
+						<Run Text="{Binding Value}" />
+						<Run Text=" : " />
+						<Run Text="{Binding ValueType}" FontWeight="Bold" />
+					</TextBlock>
+				</DataTemplate>
+			</TreeView.Resources>
+		</controls:CustomTreeView>
 
-				<controls:CustomTreeView Grid.Row="0" Grid.Column="0" SelectedTreeItem="{Binding SelectedPart}" ItemsSource="{Binding BinaryFile.Parts}" PreviewMouseWheel="treeView_PreviewMouseWheel" Padding="5">
-					<TreeView.Resources>
-						<HierarchicalDataTemplate DataType="{x:Type models:BinarySection}" ItemsSource="{Binding Parts}">
-							<TextBlock Text="{Binding Name}" />
-						</HierarchicalDataTemplate>
-						<DataTemplate DataType="{x:Type models:BinaryValue}">
-							<TextBlock>
-								<Run Text="{Binding Name}" />
-								<Run Text=" = " />
-								<Run Text="{Binding Value}" />
-								<Run Text=" : " />
-								<Run Text="{Binding ValueType}" FontWeight="Bold" />
-							</TextBlock>
-						</DataTemplate>
-					</TreeView.Resources>
-				</controls:CustomTreeView>
-
-				<!-- <StackPanel Grid.Row="0" Grid.Column="1" Background="Gray">
-					<TextBlock FontFamily="Consolas" Text="{Binding BinaryFile.HexDump}" Margin="5" />
-				</StackPanel> -->
-
-				<ItemsControl Grid.Row="0" Grid.Column="1" Background="LightGray" ItemsSource="{Binding BinaryFile.HexDumpLines}" Margin="5">
-					<ItemsControl.ItemTemplate>
-						<DataTemplate>
-							<VirtualizingStackPanel Orientation="Horizontal">
-								<TextBlock Text="{Binding Path=ByteOffset, StringFormat={}{0:00000}}" Margin="0,1,8,1" FontFamily="Consolas" />
-								<ItemsControl Background="LightGray" ItemsSource="{Binding HexBytes}">
-									<ItemsControl.ItemsPanel>
-										<ItemsPanelTemplate>
-											<VirtualizingStackPanel Orientation="Horizontal" />
-										</ItemsPanelTemplate>
-									</ItemsControl.ItemsPanel>
-									<ItemsControl.ItemTemplate>
-										<DataTemplate>
-											<TextBlock Text="{Binding Text}" Margin="0,1,3,1" FontFamily="Consolas" />
-										</DataTemplate>
-									</ItemsControl.ItemTemplate>
-								</ItemsControl>
-								<!-- <ListBox ItemsSource="{Binding HexBytes}">
-									<ListBox.ItemsPanel>
-										<ItemsPanelTemplate>
-											<VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
-										</ItemsPanelTemplate>
-									</ListBox.ItemsPanel>
-								</ListBox> -->
-							</VirtualizingStackPanel>
-						</DataTemplate>
-					</ItemsControl.ItemTemplate>
-				</ItemsControl>
-			</Grid>
-		</ScrollViewer>
-
+		<DataGrid Grid.Row="0" Grid.Column="1" ItemsSource="{Binding BinaryFile.HexDumpLines}" SelectionUnit="Cell" SelectionMode="Extended" HeadersVisibility="None" IsReadOnly="True" ScrollViewer.CanContentScroll="True" EnableRowVirtualization="True" AutoGenerateColumns="False" Margin="5">
+			<DataGrid.Columns>
+				<DataGridTextColumn Binding="{Binding Path=ByteOffset, StringFormat={}{0:00000}}" CellStyle="{StaticResource HexDumpLineGridCellStyle}" />
+				<DataGridTextColumn Binding="{Binding [0].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle0}" />
+				<DataGridTextColumn Binding="{Binding [1].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle1}" />
+				<DataGridTextColumn Binding="{Binding [2].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle2}" />
+				<DataGridTextColumn Binding="{Binding [3].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle3}" />
+				<DataGridTextColumn Binding="{Binding [4].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle4}" />
+				<DataGridTextColumn Binding="{Binding [5].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle5}" />
+				<DataGridTextColumn Binding="{Binding [6].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle6}" />
+				<DataGridTextColumn Binding="{Binding [7].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle7}" />
+				<DataGridTextColumn Binding="{Binding [8].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle8}" />
+				<DataGridTextColumn Binding="{Binding [9].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle9}" />
+				<DataGridTextColumn Binding="{Binding [10].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle10}" />
+				<DataGridTextColumn Binding="{Binding [11].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle11}" />
+				<DataGridTextColumn Binding="{Binding [12].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle12}" />
+				<DataGridTextColumn Binding="{Binding [13].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle13}" />
+				<DataGridTextColumn Binding="{Binding [14].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle14}" />
+				<DataGridTextColumn Binding="{Binding [15].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle15}" />
+			</DataGrid.Columns>
+		</DataGrid>
 	</Grid>
 </UserControl>

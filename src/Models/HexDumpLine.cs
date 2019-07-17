@@ -33,6 +33,21 @@ namespace BinaryDataReaderApp.Models
 			}
 		}
 
+		public HexDumpByte this[int i]
+		{
+			get
+			{
+				if (HexBytes.Count > i)
+				{
+					return HexBytes[i];
+				}
+				else
+				{
+					return HexDumpByte.UnusedByte;
+				}
+			}
+		}
+
 		public HexDumpLine(int byteOffset)
 		{
 			ByteOffset = byteOffset;
