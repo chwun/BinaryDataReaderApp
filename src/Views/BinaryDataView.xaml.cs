@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,38 +14,28 @@ namespace BinaryDataReaderApp.Views
 	/// </summary>
 	public partial class BinaryDataView : UserControl
 	{
-		protected BinaryDataTabViewModel ViewModel;
+		protected BinaryDataTabViewModel ViewModel
+		{
+			get
+			{
+				return DataContext as BinaryDataTabViewModel;
+			}
+		}
 
 		public BinaryDataView()
 		{
 			InitializeComponent();
 		}
 
-		public static readonly DependencyProperty TabDataProperty = DependencyProperty.Register("TabData", typeof(BinaryDataTabViewModel), typeof(BinaryDataView));
-		public BinaryDataTabViewModel TabData
+		private void DataGridHexDump_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
 		{
-			get
-			{
-				return this.GetValue(TabDataProperty) as BinaryDataTabViewModel;
-			}
-			set
-			{
-				this.SetValue(TabDataProperty, value);
-				ViewModel = value;
-				DataContext = ViewModel;
-			}
-		}
+			DataGridCellInfo cellInfo = e.AddedCells.FirstOrDefault();
 
-		private void treeView_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-		{
-			if (sender is TreeView && !e.Handled)
+			if (cellInfo != null)
 			{
-				e.Handled = true;
-				var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
-				eventArg.RoutedEvent = UIElement.MouseWheelEvent;
-				eventArg.Source = sender;
-				var parent = ((Control)sender).Parent as UIElement;
-				parent.RaiseEvent(eventArg);
+				object selectedRowItem = cellInfo.Item;
+				int selectedColumnIndex = cellInfo.Column.DisplayIndex;
+				ViewModel.SetSelectionInTree(selectedRowItem, selectedColumnIndex);
 			}
 		}
 	}

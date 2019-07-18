@@ -9,26 +9,17 @@ namespace BinaryDataReaderApp.Views
 	/// </summary>
 	public partial class BinaryTemplateView : UserControl
 	{
-		protected BinaryTemplateTabViewModel ViewModel;
+		protected BinaryTemplateTabViewModel ViewModel
+		{
+			get
+			{
+				return DataContext as BinaryTemplateTabViewModel;
+			}
+		}
 
 		public BinaryTemplateView()
 		{
 			InitializeComponent();
-		}
-
-		public static readonly DependencyProperty TabDataProperty = DependencyProperty.Register("TabData", typeof(BinaryTemplateTabViewModel), typeof(BinaryTemplateView));
-		public BinaryTemplateTabViewModel TabData
-		{
-			get
-			{
-				return this.GetValue(TabDataProperty) as BinaryTemplateTabViewModel;
-			}
-			set
-			{
-				this.SetValue(TabDataProperty, value);
-				ViewModel = value;
-				DataContext = ViewModel;
-			}
 		}
 	}
 }

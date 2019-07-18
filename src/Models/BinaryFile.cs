@@ -54,6 +54,51 @@ namespace BinaryDataReaderApp.Models
 			CreateByteList();
 		}
 
+		public void SetSelectionInHexDump(BinaryValue value)
+		{
+			var hexBytes = HexDumpLines.SelectMany(x => x.HexBytes);
+			foreach (HexDumpByte hexByte in hexBytes)
+			{
+				if ((hexByte.ByteOffset >= value.ByteOffset) && (hexByte.ByteOffset < value.ByteOffset + value.Length))
+				{
+					hexByte.IsSelected = true;
+				}
+				else
+				{
+					hexByte.IsSelected = false;
+				}
+			}
+		}
+
+		public BinaryValue FindValueByByteOffset(int byteOffset)
+		{
+			return (FindPart(Parts, x => (x is BinaryValue val) && (byteOffset >= val.ByteOffset) && (byteOffset < val.ByteOffset + val.Length)) as BinaryValue);
+		}
+
+		private BinaryPart FindPart(IEnumerable<BinaryPart> parts, Func<BinaryPart, bool> condition)
+		{
+			foreach (BinaryPart part in parts)
+			{
+				if (part is BinaryValue)
+				{
+					if (condition(part))
+					{
+						return part;
+					}
+				}
+				else if (part is BinarySection section)
+				{
+					var match = FindPart(section.Parts, condition);
+					if (match != null)
+					{
+						return match;
+					}
+				}
+			}
+
+			return null;
+		}
+
 		private void ReadData()
 		{
 			try
@@ -202,6 +247,7 @@ namespace BinaryDataReaderApp.Models
 
 			if (binaryValue != null)
 			{
+				binaryValue.Length = BinaryValueTypeHelper.GetLength(binaryValue.ValueType);
 				globalValueCache[templateValue.ID] = binaryValue.Value;
 				partsList.Add(binaryValue);
 			}

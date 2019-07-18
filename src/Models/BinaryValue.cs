@@ -7,6 +7,8 @@ namespace BinaryDataReaderApp.Models
 		private BinaryValueType valueType;
 		private object value;
 		private int byteOffset;
+		private int length;
+		private bool isSelected;
 
 		public BinaryValueType ValueType
 		{
@@ -48,6 +50,34 @@ namespace BinaryDataReaderApp.Models
 			}
 		}
 
+		public int Length
+		{
+			get
+			{
+				return length;
+			}
+			set
+			{
+				length = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public bool IsSelected
+		{
+			get
+			{
+				return isSelected;
+			}
+			set
+			{
+				if (value != isSelected)
+				{
+					isSelected = value;
+					OnPropertyChanged();
+				}
+			}
+		}
 		public string DescriptionText
 		{
 			get

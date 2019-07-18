@@ -5,7 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:local="clr-namespace:BinaryDataReaderApp" 
 	xmlns:views="clr-namespace:BinaryDataReaderApp.Views" WindowStartupLocation="CenterScreen" 
-	xmlns:common="clr-namespace:BinaryDataReaderApp.Common" mc:Ignorable="d" Title="BinaryDataReader - v00.02" Height="450" Width="800" MinHeight="450" MinWidth="500">
+	xmlns:common="clr-namespace:BinaryDataReaderApp.Common" mc:Ignorable="d" Title="BinaryDataReader - v00.03" Height="450" Width="800" MinHeight="450" MinWidth="500">
 
 	<Window.InputBindings>
 		<KeyBinding Command="{Binding OpenBinaryFileCommand}" Gesture="Ctrl+B" />
@@ -88,12 +88,12 @@
 				<common:TabItemTemplateSelector>
 					<common:TabItemTemplateSelector.TabTemplate_BinaryTemplate>
 						<DataTemplate>
-							<views:BinaryTemplateView TabData="{Binding Path=SelectedItem, ElementName=tabControl}" />
+							<views:BinaryTemplateView />
 						</DataTemplate>
 					</common:TabItemTemplateSelector.TabTemplate_BinaryTemplate>
 					<common:TabItemTemplateSelector.TabTemplate_BinaryData>
 						<DataTemplate>
-							<views:BinaryDataView TabData="{Binding Path=SelectedItem, ElementName=tabControl}" />
+							<views:BinaryDataView />
 						</DataTemplate>
 					</common:TabItemTemplateSelector.TabTemplate_BinaryData>
 				</common:TabItemTemplateSelector>

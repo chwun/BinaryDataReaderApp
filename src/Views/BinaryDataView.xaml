@@ -24,13 +24,13 @@
 			<ColumnDefinition Width="Auto" />
 		</Grid.ColumnDefinitions>
 
-		<controls:CustomTreeView Grid.Row="0" Grid.Column="0" SelectedTreeItem="{Binding SelectedPart}" ItemsSource="{Binding BinaryFile.Parts}" Padding="5">
+		<controls:CustomTreeView Grid.Row="0" Grid.Column="0" SelectedTreeItem="{Binding SelectedPart, Mode=TwoWay}" ItemsSource="{Binding BinaryFile.Parts}" Padding="5">
 			<TreeView.Resources>
 				<HierarchicalDataTemplate DataType="{x:Type models:BinarySection}" ItemsSource="{Binding Parts}">
 					<TextBlock Text="{Binding Name}" />
 				</HierarchicalDataTemplate>
 				<DataTemplate DataType="{x:Type models:BinaryValue}">
-					<TextBlock ToolTip="{Binding DescriptionText}">
+					<TextBlock ToolTip="{Binding DescriptionText}" Style="{StaticResource BinaryValueTreeItemSelectedStyle}">
 						<Run Text="{Binding Name}" />
 						<Run Text=" = " />
 						<Run Text="{Binding Value}" />
@@ -41,7 +41,7 @@
 			</TreeView.Resources>
 		</controls:CustomTreeView>
 
-		<DataGrid Grid.Row="0" Grid.Column="1" ItemsSource="{Binding BinaryFile.HexDumpLines}" SelectionUnit="Cell" SelectionMode="Extended" HeadersVisibility="None" IsReadOnly="True" ScrollViewer.CanContentScroll="True" EnableRowVirtualization="True" AutoGenerateColumns="False" Margin="5">
+		<DataGrid Grid.Row="0" Grid.Column="1" ItemsSource="{Binding BinaryFile.HexDumpLines}" SelectionUnit="Cell" SelectionMode="Single" HeadersVisibility="None" IsReadOnly="True" ScrollViewer.CanContentScroll="True" EnableRowVirtualization="True" AutoGenerateColumns="False" Margin="5" SelectedCellsChanged="DataGridHexDump_SelectedCellsChanged">
 			<DataGrid.Columns>
 				<DataGridTextColumn Binding="{Binding Path=ByteOffset, StringFormat={}{0:00000}}" CellStyle="{StaticResource HexDumpLineGridCellStyle}" />
 				<DataGridTextColumn Binding="{Binding [0].Text}" CellStyle="{StaticResource HexDumpByteGridCellStyle0}" />

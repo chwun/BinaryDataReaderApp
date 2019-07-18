@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using BinaryDataReaderApp.Models;
 
 namespace BinaryDataReaderApp.ViewModels
@@ -47,6 +49,7 @@ namespace BinaryDataReaderApp.ViewModels
 				{
 					selectedPart = value;
 					OnPropertyChanged();
+					// SetSelectionInHexDump(selectedPart);
 				}
 			}
 		}
@@ -70,11 +73,22 @@ namespace BinaryDataReaderApp.ViewModels
 			}
 		}
 
+		public void SetSelectionInTree(object selectedHexDumpRowItem, int selectedHexDumpColumnIndex)
+		{
+			HexDumpLine selectedHexDumpLine = selectedHexDumpRowItem as HexDumpLine;
+			if (selectedHexDumpLine != null)
+			{
+				int byteOffset = selectedHexDumpLine.ByteOffset;
+				byteOffset += Math.Max(selectedHexDumpColumnIndex - 1, 0);
+				SelectedPart = BinaryFile.FindValueByByteOffset(byteOffset);
+			}
+		}
+
 		private void SetSelectionInHexDump(BinaryPart part)
 		{
 			if (part is BinaryValue value)
 			{
-				// TODO
+				BinaryFile.SetSelectionInHexDump(value);
 			}
 		}
 	}

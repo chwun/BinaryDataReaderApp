@@ -2,17 +2,31 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+	<SolidColorBrush x:Key="HexDumpByteSelectedBackgroundColor" Color="Blue" />
+	<SolidColorBrush x:Key="HexDumpByteSelectedForegroundColor" Color="White" />	
+	<SolidColorBrush x:Key="BinaryValueTreeItemSelectedBackgroundColor" Color="Blue" />
+	<SolidColorBrush x:Key="BinaryValueTreeItemSelectedForegroundColor" Color="White" />
+
 	<!-- button style -->
 	<Style TargetType="Button">
 		<Setter Property="Height" Value="24" />
 		<Setter Property="MinWidth" Value="100" />
 	</Style>
 
+	<Style TargetType="TextBlock" x:Key="BinaryValueTreeItemSelectedStyle">
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource BinaryValueTreeItemSelectedBackgroundColor}" />
+				<Setter Property="Foreground" Value="{StaticResource BinaryValueTreeItemSelectedForegroundColor}" />
+			</DataTrigger>
+		</Style.Triggers>
+	</Style>
+
 	<!-- hex dump datagrid cells -->
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle">
 		<Setter Property="TextBlock.TextAlignment" Value="Center" />
 		<Setter Property="TextBlock.FontFamily" Value="Consolas" />
-		<Setter Property="TextBlock.FontSize" Value="10" />
+		<Setter Property="TextBlock.FontSize" Value="11" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type DataGridCell}">
@@ -25,151 +39,168 @@
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpLineGridCellStyle" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="TextBlock.FontSize" Value="11" />
-		<Setter Property="TextBlock.FontWeight" Value="Bold" />
+		<Setter Property="TextBlock.FontSize" Value="12" />
+		<Setter Property="TextBlock.Foreground" Value="White" />
+		<Setter Property="Background" Value="DimGray" />
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle0" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="IsSelected">
-			<Setter.Value>
-				<Binding Path="[0].IsSelected" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
-			</Setter.Value>
-		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding [0].IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource HexDumpByteSelectedBackgroundColor}" />
+				<Setter Property="TextBlock.Foreground" Value="{StaticResource HexDumpByteSelectedForegroundColor}" />
+			</DataTrigger>
+		</Style.Triggers>
 		<Setter Property="ToolTip" Value="{Binding [0].DescriptionText}" />
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle1" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="IsSelected">
-			<Setter.Value>
-				<Binding Path="[1].IsSelected" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
-			</Setter.Value>
-		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding [1].IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource HexDumpByteSelectedBackgroundColor}" />
+				<Setter Property="TextBlock.Foreground" Value="White" />
+			</DataTrigger>
+		</Style.Triggers>
 		<Setter Property="ToolTip" Value="{Binding [1].DescriptionText}" />
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle2" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="IsSelected">
-			<Setter.Value>
-				<Binding Path="[2].IsSelected" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
-			</Setter.Value>
-		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding [2].IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource HexDumpByteSelectedBackgroundColor}" />
+				<Setter Property="TextBlock.Foreground" Value="White" />
+			</DataTrigger>
+		</Style.Triggers>
 		<Setter Property="ToolTip" Value="{Binding [2].DescriptionText}" />
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle3" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="IsSelected">
-			<Setter.Value>
-				<Binding Path="[3].IsSelected" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
-			</Setter.Value>
-		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding [3].IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource HexDumpByteSelectedBackgroundColor}" />
+				<Setter Property="TextBlock.Foreground" Value="White" />
+			</DataTrigger>
+		</Style.Triggers>
 		<Setter Property="ToolTip" Value="{Binding [3].DescriptionText}" />
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle4" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="IsSelected">
-			<Setter.Value>
-				<Binding Path="[4].IsSelected" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
-			</Setter.Value>
-		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding [4].IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource HexDumpByteSelectedBackgroundColor}" />
+				<Setter Property="TextBlock.Foreground" Value="White" />
+			</DataTrigger>
+		</Style.Triggers>
 		<Setter Property="ToolTip" Value="{Binding [4].DescriptionText}" />
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle5" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="IsSelected">
-			<Setter.Value>
-				<Binding Path="[5].IsSelected" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
-			</Setter.Value>
-		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding [5].IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource HexDumpByteSelectedBackgroundColor}" />
+				<Setter Property="TextBlock.Foreground" Value="White" />
+			</DataTrigger>
+		</Style.Triggers>
 		<Setter Property="ToolTip" Value="{Binding [5].DescriptionText}" />
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle6" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="IsSelected">
-			<Setter.Value>
-				<Binding Path="[6].IsSelected" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
-			</Setter.Value>
-		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding [6].IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource HexDumpByteSelectedBackgroundColor}" />
+				<Setter Property="TextBlock.Foreground" Value="White" />
+			</DataTrigger>
+		</Style.Triggers>
 		<Setter Property="ToolTip" Value="{Binding [6].DescriptionText}" />
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle7" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="IsSelected">
-			<Setter.Value>
-				<Binding Path="[7].IsSelected" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
-			</Setter.Value>
-		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding [7].IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource HexDumpByteSelectedBackgroundColor}" />
+				<Setter Property="TextBlock.Foreground" Value="White" />
+			</DataTrigger>
+		</Style.Triggers>
 		<Setter Property="ToolTip" Value="{Binding [7].DescriptionText}" />
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle8" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="IsSelected">
-			<Setter.Value>
-				<Binding Path="[8].IsSelected" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
-			</Setter.Value>
-		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding [8].IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource HexDumpByteSelectedBackgroundColor}" />
+				<Setter Property="TextBlock.Foreground" Value="White" />
+			</DataTrigger>
+		</Style.Triggers>
 		<Setter Property="ToolTip" Value="{Binding [8].DescriptionText}" />
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle9" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="IsSelected">
-			<Setter.Value>
-				<Binding Path="[9].IsSelected" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
-			</Setter.Value>
-		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding [9].IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource HexDumpByteSelectedBackgroundColor}" />
+				<Setter Property="TextBlock.Foreground" Value="White" />
+			</DataTrigger>
+		</Style.Triggers>
 		<Setter Property="ToolTip" Value="{Binding [9].DescriptionText}" />
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle10" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="IsSelected">
-			<Setter.Value>
-				<Binding Path="[10].IsSelected" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
-			</Setter.Value>
-		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding [10].IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource HexDumpByteSelectedBackgroundColor}" />
+				<Setter Property="TextBlock.Foreground" Value="White" />
+			</DataTrigger>
+		</Style.Triggers>
 		<Setter Property="ToolTip" Value="{Binding [10].DescriptionText}" />
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle11" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="IsSelected">
-			<Setter.Value>
-				<Binding Path="[11].IsSelected" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
-			</Setter.Value>
-		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding [11].IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource HexDumpByteSelectedBackgroundColor}" />
+				<Setter Property="TextBlock.Foreground" Value="White" />
+			</DataTrigger>
+		</Style.Triggers>
 		<Setter Property="ToolTip" Value="{Binding [11].DescriptionText}" />
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle12" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="IsSelected">
-			<Setter.Value>
-				<Binding Path="[12].IsSelected" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
-			</Setter.Value>
-		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding [12].IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource HexDumpByteSelectedBackgroundColor}" />
+				<Setter Property="TextBlock.Foreground" Value="White" />
+			</DataTrigger>
+		</Style.Triggers>
 		<Setter Property="ToolTip" Value="{Binding [12].DescriptionText}" />
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle13" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="IsSelected">
-			<Setter.Value>
-				<Binding Path="[13].IsSelected" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
-			</Setter.Value>
-		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding [13].IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource HexDumpByteSelectedBackgroundColor}" />
+				<Setter Property="TextBlock.Foreground" Value="White" />
+			</DataTrigger>
+		</Style.Triggers>
 		<Setter Property="ToolTip" Value="{Binding [13].DescriptionText}" />
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle14" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="IsSelected">
-			<Setter.Value>
-				<Binding Path="[14].IsSelected" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
-			</Setter.Value>
-		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding [14].IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource HexDumpByteSelectedBackgroundColor}" />
+				<Setter Property="TextBlock.Foreground" Value="White" />
+			</DataTrigger>
+		</Style.Triggers>
 		<Setter Property="ToolTip" Value="{Binding [14].DescriptionText}" />
 	</Style>
 
 	<Style TargetType="DataGridCell" x:Key="HexDumpByteGridCellStyle15" BasedOn="{StaticResource HexDumpByteGridCellStyle}">
-		<Setter Property="IsSelected">
-			<Setter.Value>
-				<Binding Path="[15].IsSelected" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
-			</Setter.Value>
-		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding [15].IsSelected}" Value="True">
+				<Setter Property="Background" Value="{StaticResource HexDumpByteSelectedBackgroundColor}" />
+				<Setter Property="TextBlock.Foreground" Value="White" />
+			</DataTrigger>
+		</Style.Triggers>
 		<Setter Property="ToolTip" Value="{Binding [15].DescriptionText}" />
 	</Style>
 
