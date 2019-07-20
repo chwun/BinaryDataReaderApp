@@ -4,9 +4,19 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>netcoreapp3.0</TargetFramework>
 		<UseWPF>true</UseWPF>
-		<AssemblyVersion>00.03</AssemblyVersion>
-		<FileVersion>00.03</FileVersion>
-		<Version>00.03</Version>
+		<AssemblyVersion>00.04</AssemblyVersion>
+		<FileVersion>00.04</FileVersion>
+		<Version>00.04</Version>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.extensions.configuration" Version="2.2.0" />
+	  <PackageReference Include="Microsoft.extensions.configuration.fileextensions" Version="2.2.0" />
+	  <PackageReference Include="Microsoft.extensions.configuration.json" Version="2.2.0" />
+	</ItemGroup>
 
 </Project>

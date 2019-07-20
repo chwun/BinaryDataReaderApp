@@ -5,10 +5,12 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:local="clr-namespace:BinaryDataReaderApp" 
 	xmlns:views="clr-namespace:BinaryDataReaderApp.Views" WindowStartupLocation="CenterScreen" 
-	xmlns:common="clr-namespace:BinaryDataReaderApp.Common" mc:Ignorable="d" Title="BinaryDataReader - v00.03" Height="450" Width="800" MinHeight="450" MinWidth="500">
+	xmlns:common="clr-namespace:BinaryDataReaderApp.Common" mc:Ignorable="d" 
+	AllowDrop="True" DragEnter="Window_DragEnter" Drop="Window_Drop"
+	Title="BinaryDataReader - v00.04" Height="450" Width="800" MinHeight="450" MinWidth="500">
 
 	<Window.InputBindings>
-		<KeyBinding Command="{Binding OpenBinaryFileCommand}" Gesture="Ctrl+B" />
+		<KeyBinding Command="{Binding OpenBinaryFileCommand}" Gesture="Ctrl+O" />
 	</Window.InputBindings>
 
 	<Grid Margin="5">
@@ -23,7 +25,7 @@
 
 		<Menu Grid.Row="0">
 			<MenuItem Header="{DynamicResource MainMenu_File}">
-				<MenuItem Header="{DynamicResource MainMenu_File_OpenBinary}" Command="{Binding OpenBinaryFileCommand}" />
+				<MenuItem Header="{DynamicResource MainMenu_File_OpenBinary}" Command="{Binding OpenBinaryFileCommand}" InputGestureText="Strg+O" />
 				<Separator />
 				<MenuItem Header="{DynamicResource MainMenu_File_NewTemplate}" Command="{Binding NewTemplateCommand}" />
 				<MenuItem Header="{DynamicResource MainMenu_File_OpenTemplate}" Command="{Binding LoadTemplateCommand}" />

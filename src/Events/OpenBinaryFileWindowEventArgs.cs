@@ -1,6 +1,6 @@
 using System;
 
-namespace BinaryDataReaderApp.ViewModels
+namespace BinaryDataReaderApp.Events
 {
     public class OpenBinaryFileWindowEventArgs : EventArgs
     {

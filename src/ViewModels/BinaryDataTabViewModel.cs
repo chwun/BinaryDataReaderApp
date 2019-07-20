@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using BinaryDataReaderApp.Configuration;
 using BinaryDataReaderApp.Models;
 
 namespace BinaryDataReaderApp.ViewModels
@@ -10,6 +11,7 @@ namespace BinaryDataReaderApp.ViewModels
 		private string binaryFilePath;
 		private BinaryDataTemplate template;
 		private BinaryPart selectedPart;
+		private bool showHexDump;
 
 		public BinaryFile BinaryFile
 		{
@@ -49,20 +51,32 @@ namespace BinaryDataReaderApp.ViewModels
 				{
 					selectedPart = value;
 					OnPropertyChanged();
-					// SetSelectionInHexDump(selectedPart);
+					SetSelectionInHexDump(selectedPart);
 				}
 			}
 		}
 
-		public BinaryDataTabViewModel(string header, string binaryFilePath, string templateFile)
+		public bool ShowHexDump
+		{
+			get{
+				return showHexDump;
+			}
+			set{
+				showHexDump = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public BinaryDataTabViewModel(string header, string binaryFilePath, BinaryDataTemplate template)
 		: base(header)
 		{
-			BinaryDataTemplateXMLProvider templateProvider = new BinaryDataTemplateXMLProvider(templateFile);
-			template = new BinaryDataTemplate("template");
+			this.template = template;
 
 			this.BinaryFilePath = binaryFilePath;
 
-			if (template.ReadFromXML(templateProvider))
+			ShowHexDump = AppSettings.Instance.GetConfigValue_Bool(AppSettings.Key_ShowHexDump);
+
+			if (template != null)
 			{
 				BinaryFile = new BinaryFile(binaryFilePath, template);
 				BinaryFile.Read();
@@ -75,6 +89,8 @@ namespace BinaryDataReaderApp.ViewModels
 
 		public void SetSelectionInTree(object selectedHexDumpRowItem, int selectedHexDumpColumnIndex)
 		{
+			// TODO: Auswahl im Tree funktioniert noch nicht!
+
 			HexDumpLine selectedHexDumpLine = selectedHexDumpRowItem as HexDumpLine;
 			if (selectedHexDumpLine != null)
 			{
