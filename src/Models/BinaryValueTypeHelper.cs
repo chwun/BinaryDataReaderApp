@@ -18,10 +18,12 @@ namespace BinaryDataReaderApp.Models
 
                 case BinaryValueType.INT:
                 case BinaryValueType.UINT:
+                case BinaryValueType.FLOAT:
                     return 4;
 
                 case BinaryValueType.LONG:
                 case BinaryValueType.ULONG:
+                case BinaryValueType.DOUBLE:
                     return 8;
 
                 default:

@@ -9,6 +9,8 @@ namespace BinaryDataReaderApp.Models
 		UINT,
 		LONG,
 		ULONG,
-		BOOL
+		BOOL,
+		FLOAT,
+		DOUBLE
 	}
 }

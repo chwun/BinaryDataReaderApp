@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using BinaryDataReaderApp.Events;
+using BinaryDataReaderApp.Localization;
 
 namespace BinaryDataReaderApp.Models
 {
@@ -13,21 +14,10 @@ namespace BinaryDataReaderApp.Models
         private string binaryFile;
         private BinaryDataTemplate template;
         private List<HexDumpLine> hexDumpLines;
-
         private ObservableCollection<BinaryPart> parts;
-
-        public ObservableCollection<BinaryPart> Parts
-        {
-            get
-            {
-                return parts;
-            }
-            set
-            {
-                parts = value;
-                OnPropertyChanged();
-            }
-        }
+        private string errors;
+        private bool hasErrors;
+        private string fileSizeText;
 
         public List<HexDumpLine> HexDumpLines
         {
@@ -35,12 +25,66 @@ namespace BinaryDataReaderApp.Models
             {
                 return hexDumpLines;
             }
-            set
+            private set
             {
                 hexDumpLines = value;
                 OnPropertyChanged();
             }
         }
+
+        public ObservableCollection<BinaryPart> Parts
+        {
+            get
+            {
+                return parts;
+            }
+            private set
+            {
+                parts = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Errors
+        {
+            get
+            {
+                return errors;
+            }
+            private set
+            {
+                errors = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool HasErrors
+        {
+            get
+            {
+                return hasErrors;
+            }
+            private set
+            {
+                hasErrors = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string FileSizeText
+        {
+            get
+            {
+                return fileSizeText;
+            }
+            private set
+            {
+                fileSizeText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public BinaryDataTemplate Template { get => template; private set => template = value; }
 
         #region events
 
@@ -53,7 +97,7 @@ namespace BinaryDataReaderApp.Models
         public BinaryFile(string binaryFile, BinaryDataTemplate template)
         {
             this.binaryFile = binaryFile;
-            this.template = template;
+            this.Template = template;
             Parts = new ObservableCollection<BinaryPart>();
         }
 
@@ -120,6 +164,8 @@ namespace BinaryDataReaderApp.Models
 
         private void ReadData()
         {
+            List<string> errorList = new List<string>();
+
             try
             {
                 using (BinaryReader reader = new BinaryReader(File.Open(binaryFile, FileMode.Open)))
@@ -127,16 +173,28 @@ namespace BinaryDataReaderApp.Models
                     Dictionary<long, object> globalValueCache = new Dictionary<long, object>();
                     int byteOffset = 0;
 
-                    foreach (BinaryPart templatePart in template.Parts)
+                    foreach (BinaryPart templatePart in Template.Parts)
                     {
-                        ReadPart(templatePart, Parts, globalValueCache, ref byteOffset, reader);
+                        ReadPart(templatePart, Parts, globalValueCache, ref byteOffset, errorList, reader);
+                    }
+
+                    if (reader.BaseStream.Position < reader.BaseStream.Length)
+                    {
+                        errorList.Add(TranslationManager.Instance.GetResourceText("BinaryFile_FileTooLongError"));
                     }
                 }
             }
-            catch
+            catch (EndOfStreamException)
             {
-
+                errorList.Add(TranslationManager.Instance.GetResourceText("BinaryFile_EndOfStreamError"));
             }
+            catch (Exception e)
+            {
+                errorList.Add(TranslationManager.Instance.GetResourceText("BinaryFile_Error") + $" (\"{e.Message}\")");
+            }
+
+            Errors = string.Join(Environment.NewLine, errorList);
+            HasErrors = Errors.Length > 0;
         }
 
         private void CreateByteList()
@@ -162,6 +220,8 @@ namespace BinaryDataReaderApp.Models
 
                     byteOffset++;
                 }
+
+                FileSizeText = $"{bytes.Length} B";
             }
             catch
             {
@@ -170,20 +230,20 @@ namespace BinaryDataReaderApp.Models
         }
 
         private void ReadPart(BinaryPart templatePart, ObservableCollection<BinaryPart> partsList, Dictionary<long, object> globalValueCache,
-            ref int byteOffset, BinaryReader reader)
+            ref int byteOffset, List<string> errorList, BinaryReader reader)
         {
             if (templatePart is BinarySection templateSection)
             {
-                ReadSection(templateSection, partsList, globalValueCache, ref byteOffset, reader);
+                ReadSection(templateSection, partsList, globalValueCache, ref byteOffset, errorList, reader);
             }
             else if (templatePart is BinaryValue templateValue)
             {
-                ReadValue(templateValue, partsList, globalValueCache, ref byteOffset, reader);
+                ReadValue(templateValue, partsList, globalValueCache, ref byteOffset, errorList, reader);
             }
         }
 
         private void ReadSection(BinarySection templateSection, ObservableCollection<BinaryPart> partsList, Dictionary<long, object> globalValueCache,
-            ref int byteOffset, BinaryReader reader)
+            ref int byteOffset, List<string> errorList, BinaryReader reader)
         {
             long numberOfLoops = 1;
             LoopSettings loopSettings = templateSection.LoopSettings;
@@ -209,7 +269,7 @@ namespace BinaryDataReaderApp.Models
 
                 foreach (BinaryPart templatePart in templateSection.Parts)
                 {
-                    ReadPart(templatePart, binarySection.Parts, globalValueCache, ref byteOffset, reader);
+                    ReadPart(templatePart, binarySection.Parts, globalValueCache, ref byteOffset, errorList, reader);
                 }
 
                 if (binarySection.Parts.Any())
@@ -220,56 +280,69 @@ namespace BinaryDataReaderApp.Models
         }
 
         private void ReadValue(BinaryValue templateValue, ObservableCollection<BinaryPart> partsList, Dictionary<long, object> globalValueCache,
-            ref int byteOffset, BinaryReader reader)
+            ref int byteOffset, List<string> errorList, BinaryReader reader)
         {
-            BinaryValue binaryValue = new BinaryValue(0, templateValue.Name, templateValue.ValueType);
+            BinaryValue binaryValue = new BinaryValue(0, templateValue.Name, templateValue.ValueType, templateValue.Converter);
             binaryValue.ByteOffset = byteOffset;
 
-            switch (templateValue.ValueType)
+            try
             {
-                case BinaryValueType.BYTE:
-                    binaryValue.Value = reader.ReadByte();
-                    byteOffset += 1;
-                    break;
-                case BinaryValueType.SHORT:
-                    binaryValue.Value = reader.ReadInt16();
-                    byteOffset += 2;
-                    break;
-                case BinaryValueType.USHORT:
-                    binaryValue.Value = reader.ReadUInt16();
-                    byteOffset += 2;
-                    break;
-                case BinaryValueType.INT:
-                    binaryValue.Value = reader.ReadInt32();
-                    byteOffset += 4;
-                    break;
-                case BinaryValueType.UINT:
-                    binaryValue.Value = reader.ReadUInt32();
-                    byteOffset += 4;
-                    break;
-                case BinaryValueType.LONG:
-                    binaryValue.Value = reader.ReadInt64();
-                    byteOffset += 8;
-                    break;
-                case BinaryValueType.ULONG:
-                    binaryValue.Value = reader.ReadUInt64();
-                    byteOffset += 8;
-                    break;
-                case BinaryValueType.BOOL:
-                    binaryValue.Value = reader.ReadBoolean();
-                    byteOffset += 1;
-                    break;
-                default:
-                    binaryValue = null;
-                    break;
+                switch (templateValue.ValueType)
+                {
+                    case BinaryValueType.BYTE:
+                        binaryValue.Value = reader.ReadByte();
+                        byteOffset += 1;
+                        break;
+                    case BinaryValueType.SHORT:
+                        binaryValue.Value = reader.ReadInt16();
+                        byteOffset += 2;
+                        break;
+                    case BinaryValueType.USHORT:
+                        binaryValue.Value = reader.ReadUInt16();
+                        byteOffset += 2;
+                        break;
+                    case BinaryValueType.INT:
+                        binaryValue.Value = reader.ReadInt32();
+                        byteOffset += 4;
+                        break;
+                    case BinaryValueType.UINT:
+                        binaryValue.Value = reader.ReadUInt32();
+                        byteOffset += 4;
+                        break;
+                    case BinaryValueType.LONG:
+                        binaryValue.Value = reader.ReadInt64();
+                        byteOffset += 8;
+                        break;
+                    case BinaryValueType.ULONG:
+                        binaryValue.Value = reader.ReadUInt64();
+                        byteOffset += 8;
+                        break;
+                    case BinaryValueType.BOOL:
+                        binaryValue.Value = reader.ReadBoolean();
+                        byteOffset += 1;
+                        break;
+                    case BinaryValueType.FLOAT:
+                        binaryValue.Value = reader.ReadSingle();
+                        byteOffset += 4;
+                        break;
+                    case BinaryValueType.DOUBLE:
+                        binaryValue.Value = reader.ReadDouble();
+                        byteOffset += 8;
+                        break;
+                    default:
+                        binaryValue = BinaryValue.CreateErrorValue(templateValue.Name, templateValue.ValueType);
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                binaryValue = BinaryValue.CreateErrorValue(templateValue.Name, templateValue.ValueType);
+                errorList.Add(TranslationManager.Instance.GetResourceText("BinaryFile_ValueError") + $" \"{e.Message}\"s");
             }
 
-            if (binaryValue != null)
-            {
-                binaryValue.Length = BinaryValueTypeHelper.GetLength(binaryValue.ValueType);
-                globalValueCache[templateValue.ID] = binaryValue.Value;
-                partsList.Add(binaryValue);
-            }
+            binaryValue.Length = BinaryValueTypeHelper.GetLength(binaryValue.ValueType);
+            globalValueCache[templateValue.ID] = binaryValue.Value;
+            partsList.Add(binaryValue);
         }
     }
 }

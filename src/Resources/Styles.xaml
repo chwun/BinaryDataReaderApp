@@ -2,10 +2,14 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+	<Color x:Key="GreenColor">#3D992C</Color>
+	<Color x:Key="RedColor">#D41717</Color>
+
 	<SolidColorBrush x:Key="HexDumpByteSelectedBackgroundColor" Color="Blue" />
-	<SolidColorBrush x:Key="HexDumpByteSelectedForegroundColor" Color="White" />	
-	<SolidColorBrush x:Key="BinaryValueTreeItemSelectedBackgroundColor" Color="Blue" />
-	<SolidColorBrush x:Key="BinaryValueTreeItemSelectedForegroundColor" Color="White" />
+	<SolidColorBrush x:Key="HexDumpByteSelectedForegroundColor" Color="White" />
+	<SolidColorBrush x:Key="BinaryValueTreeItemErrorForegroundColor" Color="Red" />
+	<SolidColorBrush x:Key="StatusGreenBrush" Color="{StaticResource GreenColor}" />
+	<SolidColorBrush x:Key="StatusRedBrush" Color="{StaticResource RedColor}" />
 
 	<!-- button style -->
 	<Style TargetType="Button">
@@ -15,8 +19,7 @@
 
 	<Style TargetType="TextBlock" x:Key="BinaryValueTreeItemSelectedStyle">
 		<Style.Triggers>
-			<DataTrigger Binding="{Binding IsSelected}" Value="True">
-				<Setter Property="Background" Value="{StaticResource BinaryValueTreeItemSelectedBackgroundColor}" />
+			<DataTrigger Binding="{Binding HasError}" Value="True">
 				<Setter Property="Foreground" Value="{StaticResource BinaryValueTreeItemSelectedForegroundColor}" />
 			</DataTrigger>
 		</Style.Triggers>

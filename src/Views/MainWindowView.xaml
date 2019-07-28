@@ -7,7 +7,7 @@
 	xmlns:views="clr-namespace:BinaryDataReaderApp.Views" WindowStartupLocation="CenterScreen" 
 	xmlns:common="clr-namespace:BinaryDataReaderApp.Common" mc:Ignorable="d" 
 	AllowDrop="True" DragEnter="Window_DragEnter" Drop="Window_Drop"
-	Title="BinaryDataReader - v00.04" Height="450" Width="800" MinHeight="450" MinWidth="500">
+	Title="BinaryDataReader - v00.05" Height="450" Width="800" MinHeight="500" MinWidth="500">
 
 	<Window.InputBindings>
 		<KeyBinding Command="{Binding OpenBinaryFileCommand}" Gesture="Ctrl+O" />

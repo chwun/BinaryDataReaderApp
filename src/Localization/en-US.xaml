@@ -22,5 +22,14 @@
 
 	<system:String x:Key="BinaryFile_ByteOffset">Byte-Offset</system:String>
 	<system:String x:Key="BinaryFile_Value">Wert</system:String>
+	<system:String x:Key="BinaryFile_FileSize">Dateigröße:</system:String>
+	<system:String x:Key="BinaryFile_FileStatus">Status:</system:String>
+	<system:String x:Key="BinaryFile_Template">Template:</system:String>
+
+	<system:String x:Key="BinaryFile_NoErrors">Keine Fehler</system:String>
+	<system:String x:Key="BinaryFile_Error">Allgemeiner Fehler beim Einlesen der Datei</system:String>
+	<system:String x:Key="BinaryFile_ValueError">Fehlerhafter Wert für</system:String>
+	<system:String x:Key="BinaryFile_EndOfStreamError">EndOfStreamException: Die Datei ist kürzer als im Template definiert!</system:String>
+	<system:String x:Key="BinaryFile_FileTooLongError">Die Datei ist länger als im Template definiert!</system:String>
 
 </ResourceDictionary>
