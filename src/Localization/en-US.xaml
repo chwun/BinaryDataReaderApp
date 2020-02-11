@@ -6,6 +6,7 @@
 	<system:String x:Key="MainMenu_File_OpenBinary">Binärdatei öffnen</system:String>
 	<system:String x:Key="MainMenu_File_NewTemplate">Neues Template</system:String>
 	<system:String x:Key="MainMenu_File_OpenTemplate">Template öffnen</system:String>
+	<system:String x:Key="MainMenu_File_SaveTemplate">Template speichern</system:String>
 	<system:String x:Key="MainMenu_File_Close">Beenden</system:String>
 
 	<system:String x:Key="BinaryTemplateProperties_Header">Eigenschaften</system:String>
@@ -16,6 +17,7 @@
 	<system:String x:Key="Dialog_Cancel">Abbrechen</system:String>
 
 	<system:String x:Key="SelectTemplate">Template auswählen</system:String>
+	<system:String x:Key="SaveTemplate">Template speichern</system:String>
 	<system:String x:Key="SelectBinaryFile">Binärdatei auswählen</system:String>
 	<system:String x:Key="FileDialogFilter_Templates">Templates</system:String>
 	<system:String x:Key="FileDialogFilter_Binary">Binärdateien</system:String>

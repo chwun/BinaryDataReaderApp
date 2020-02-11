@@ -1,34 +1,39 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BinaryDataReaderApp.Models
 {
-    public class EnumStringConverter
-    {
-        private Dictionary<int, string> enumValues;
 
-        public string Name { get; private set; }
+	public class EnumToStringConverter : IntToStringConverter
+	{
+		private Dictionary<int, string> enumValues;
 
-        public EnumStringConverter(string name)
-        {
-            enumValues = new Dictionary<int, string>();
-            Name = name;
-        }
+		public EnumToStringConverter(string name)
+		{
+			enumValues = new Dictionary<int, string>();
+			Name = name;
+		}
 
-        public string GetText(int value)
-        {
-            if (enumValues.ContainsKey(value))
-            {
-                return enumValues[value];
-            }
-            else
-            {
-                return "";
-            }
-        }
+		public override string GetText(int value)
+		{
+			if (enumValues.ContainsKey(value))
+			{
+				return enumValues[value];
+			}
+			else
+			{
+				return "";
+			}
+		}
 
-        public void AddValue(int value, string text)
-        {
-            enumValues[value] = text;
-        }
-    }
+		public override void AddMapping(int value, string text)
+		{
+			enumValues[value] = text;
+		}
+
+		public IEnumerable<KeyValuePair<int, string>> GetMappings()
+		{
+			return enumValues.Select(x => x);
+		}
+	}
 }

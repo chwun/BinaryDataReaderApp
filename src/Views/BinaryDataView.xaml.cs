@@ -43,8 +43,8 @@ namespace BinaryDataReaderApp.Views
             if (cellInfo != null)
             {
                 object selectedRowItem = cellInfo.Item;
-                int selectedColumnIndex = cellInfo.Column.DisplayIndex;
-                ViewModel.SetSelectionInTree(selectedRowItem, selectedColumnIndex);
+                int selectedColumnIndex = cellInfo.Column?.DisplayIndex ?? -1;
+                ViewModel?.SetSelectionInTree(selectedRowItem, selectedColumnIndex);
             }
         }
 

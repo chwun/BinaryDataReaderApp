@@ -41,7 +41,7 @@ namespace BinaryDataReaderApp.ViewModels
 		{
 			BinaryTemplate = new BinaryDataTemplate(Header);
 
-			if (BinaryTemplate.ReadFromXML(new BinaryDataTemplateXMLProvider(file)))
+			if (BinaryTemplate.ReadFromXML(new XMLAccess(file)))
 			{
 				Header = BinaryTemplate.Name;
 				return true;
@@ -50,6 +50,11 @@ namespace BinaryDataReaderApp.ViewModels
 			{
 				return false;
 			}
+		}
+
+		public bool SaveTemplateToFile(string file)
+		{
+			return BinaryTemplate.SaveToXML(new XMLAccess(file));
 		}
 	}
 }

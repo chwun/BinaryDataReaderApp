@@ -91,6 +91,20 @@ namespace BinaryDataReaderApp.ViewModels
 			}
 		}
 
+		private ICommand saveTemplateCommand;
+		public ICommand SaveTemplateCommand
+		{
+			get
+			{
+				if (saveTemplateCommand == null)
+				{
+					saveTemplateCommand = new ActionCommand(SaveTemplateCommand_Executed, SaveTemplateCommand_CanExecute);
+				}
+
+				return saveTemplateCommand;
+			}
+		}
+
 		private ICommand openBinaryFileCommand;
 		public ICommand OpenBinaryFileCommand
 		{
@@ -175,6 +189,43 @@ namespace BinaryDataReaderApp.ViewModels
 				else
 				{
 					// TODO!
+				}
+			}
+		}
+
+		private bool SaveTemplateCommand_CanExecute(object parameter)
+		{
+			if (TabVMs.Count > SelectedTabIndex)
+			{
+				return (TabVMs[SelectedTabIndex] is BinaryTemplateTabViewModel);
+			}
+
+			return false;
+		}
+
+		private void SaveTemplateCommand_Executed(object parameter)
+		{
+			if ((TabVMs.Count > SelectedTabIndex) && TabVMs[SelectedTabIndex] is BinaryTemplateTabViewModel templateTabViewModel)
+			{
+				FileDialogEventArgs fileDialogEventArgs = new FileDialogEventArgs()
+				{
+					Title = TranslationManager.Instance.GetResourceText("SaveTemplate"),
+					Filter = TranslationManager.Instance.GetResourceText("FileDialogFilter_Templates") + " (*.xml)|*.xml"
+				};
+
+				FileDialogRequested?.Invoke(this, fileDialogEventArgs);
+
+				string templateFile = fileDialogEventArgs.File;
+				if (!string.IsNullOrWhiteSpace(templateFile))
+				{
+					if (templateTabViewModel.SaveTemplateToFile(templateFile))
+					{
+						// TODO
+					}
+					else
+					{
+						// TODO
+					}
 				}
 			}
 		}

@@ -125,7 +125,7 @@ namespace BinaryDataReaderApp.Models
 
 		private void ReadTemplateFile(string file)
 		{
-			BinaryDataTemplateXMLProvider xmlProvider = new BinaryDataTemplateXMLProvider(file);
+			XMLAccess xmlProvider = new XMLAccess(file);
 			BinaryDataTemplate template = new BinaryDataTemplate("new template");
 
 			if (template.ReadFromXML(xmlProvider))
