@@ -16,11 +16,15 @@ namespace BinaryDataReaderApp.Views
 	/// </summary>
 	public partial class MainWindowView : Window
 	{
+		public static MainWindowView MainWindowInstance {get; private set;}
+
 		protected MainViewModel ViewModel;
 
 		public MainWindowView()
 		{
 			InitializeComponent();
+
+			MainWindowInstance = this;
 
 			TranslationManager.Instance.SetLanguage(CultureInfo.GetCultureInfo("en-US")); // TODO - Workaround für Bug TabControl!!!
 

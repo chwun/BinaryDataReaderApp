@@ -180,7 +180,7 @@ namespace BinaryDataReaderApp.ViewModels
 			string templateFile = fileDialogEventArgs.File;
 			if (!string.IsNullOrWhiteSpace(templateFile))
 			{
-				BinaryTemplateTabViewModel loadedTemplate = new BinaryTemplateTabViewModel("loaded template");
+				BinaryTemplateTabViewModel loadedTemplate = new BinaryTemplateTabViewModel(templateFile);
 
 				if (loadedTemplate.LoadTemplateFromFile(templateFile))
 				{

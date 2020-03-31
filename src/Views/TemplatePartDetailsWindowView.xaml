@@ -1,0 +1,108 @@
+<Window x:Class="BinaryDataReaderApp.Views.TemplatePartDetailsWindowView" 
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:system="clr-namespace:System;assembly=mscorlib" 
+	xmlns:local="clr-namespace:BinaryDataReaderApp" 
+	xmlns:converters="clr-namespace:BinaryDataReaderApp.Converters" 
+	xmlns:views="clr-namespace:BinaryDataReaderApp.Views" 
+	xmlns:common="clr-namespace:BinaryDataReaderApp.Common" mc:Ignorable="d" 
+	xmlns:models="clr-namespace:BinaryDataReaderApp.Models" Background="{DynamicResource WindowColorBrush}" Title="{Binding DialogTitle}" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" ShowInTaskbar="false">
+
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="../Resources/Styles.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+
+			<ObjectDataProvider x:Key="binaryValueTypeEnum" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+				<ObjectDataProvider.MethodParameters>
+					<x:Type TypeName="models:BinaryValueType"/>
+				</ObjectDataProvider.MethodParameters>
+			</ObjectDataProvider>
+
+			<converters:ReferenceToVisibilityConverter x:Key="referenceToVisibilityConverter" />
+			<converters:EnumToBooleanConverter x:Key="enumToBooleanConverter" />
+		</ResourceDictionary>
+	</Window.Resources>
+
+	<Grid Margin="5">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="5" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="5" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<Label Grid.Row="0" Grid.Column="0" Content="{DynamicResource BinaryTemplateProperties_PartName}" />
+			<TextBox Grid.Row="0" Grid.Column="2" Text="{Binding PartName, UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True}" TargetUpdated="TextBoxPartName_SourceUpdated" />
+		</Grid>
+
+		<GroupBox Grid.Row="1" Grid.Column="0" Header="{DynamicResource BinaryTemplate_LoopSettings}" Margin="0,10,0,0" Visibility="{Binding Section, Converter={StaticResource referenceToVisibilityConverter}}">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="25" />
+					<RowDefinition Height="25" />
+					<RowDefinition Height="25" />
+				</Grid.RowDefinitions>
+
+				<RadioButton Grid.Row="0" Grid.Column="0" GroupName="LoopType" VerticalAlignment="Center" Content="{DynamicResource BinaryTemplate_LoopSettings_None}" IsChecked="{Binding LoopSettings.Type, Converter={StaticResource enumToBooleanConverter}, ConverterParameter=NONE}" />
+
+				<Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="5" />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
+
+					<RadioButton Grid.Column="0" GroupName="LoopType" VerticalAlignment="Center" Content="{DynamicResource BinaryTemplate_LoopSettings_Fixed}" IsChecked="{Binding LoopSettings.Type, Converter={StaticResource enumToBooleanConverter}, ConverterParameter=FIXED}" />
+					<TextBox Grid.Column="2" Text="{Binding LoopSettings.LoopCountFixed, UpdateSourceTrigger=PropertyChanged}" Width="55" TextAlignment="Right" />
+				</Grid>
+
+				<Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="5" />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
+
+					<RadioButton Grid.Column="0" GroupName="LoopType" VerticalAlignment="Center" Content="{DynamicResource BinaryTemplate_LoopSettings_Reference}" IsChecked="{Binding LoopSettings.Type, Converter={StaticResource enumToBooleanConverter}, ConverterParameter=REFERENCE}" />
+					<TextBox Grid.Column="2" Text="{Binding LoopSettings.LoopCountReference, UpdateSourceTrigger=PropertyChanged}" />
+				</Grid>
+
+			</Grid>
+		</GroupBox>
+
+
+		<Grid Grid.Row="1" Grid.Column="0" Visibility="{Binding Value, Converter={StaticResource referenceToVisibilityConverter}}">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="5" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<Label Grid.Row="0" Grid.Column="0" Content="{DynamicResource BinaryTemplateProperties_Type}" />
+			<ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding Source={StaticResource binaryValueTypeEnum}}" SelectedItem="{Binding ValueType}" />
+		</Grid>
+
+		<StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
+			<Button Content="{DynamicResource Dialog_Cancel}" IsCancel="True" Margin="0,0,40,0" />
+			<Button Content="{DynamicResource Dialog_OK}" IsDefault="True" Command="{Binding OkCommand}" Margin="0,0,0,0" />
+		</StackPanel>
+
+	</Grid>
+</Window>

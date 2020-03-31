@@ -5,9 +5,15 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:local="clr-namespace:BinaryDataReaderApp" 
 	xmlns:views="clr-namespace:BinaryDataReaderApp.Views" WindowStartupLocation="CenterScreen" 
-	xmlns:common="clr-namespace:BinaryDataReaderApp.Common" mc:Ignorable="d" 
-	AllowDrop="True" DragEnter="Window_DragEnter" Drop="Window_Drop"
-	Title="BinaryDataReader - v00.06" Height="450" Width="800" MinHeight="500" MinWidth="500">
+	xmlns:common="clr-namespace:BinaryDataReaderApp.Common" mc:Ignorable="d" AllowDrop="True" DragEnter="Window_DragEnter" Drop="Window_Drop" Background="{DynamicResource WindowColorBrush}" Title="BinaryDataReader - v00.06" Height="450" Width="800" MinHeight="500" MinWidth="500">
+
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="../Resources/Styles.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Window.Resources>
 
 	<Window.InputBindings>
 		<KeyBinding Command="{Binding OpenBinaryFileCommand}" Gesture="Ctrl+O" />
@@ -40,7 +46,7 @@
 				<common:TabItemTemplateSelector>
 					<common:TabItemTemplateSelector.TabTemplate_BinaryTemplate>
 						<DataTemplate>
-							<Grid>
+							<Grid> 
 								<Grid.RowDefinitions>
 									<RowDefinition Height="Auto" />
 								</Grid.RowDefinitions>
@@ -51,7 +57,7 @@
 								</Grid.ColumnDefinitions>
 
 								<TextBlock Grid.Column="0" Text="{Binding Header}" FontSize="14" VerticalAlignment="Center" ToolTip="{Binding Header}" />
-								<Button Grid.Column="2" Command="{Binding Path=DataContext.CloseTabCommand, ElementName=tabControl}" CommandParameter="{Binding}">
+								<Button Grid.Column="2" MinWidth="0" Command="{Binding Path=DataContext.CloseTabCommand, ElementName=tabControl}" CommandParameter="{Binding}">
 									<Button.Template>
 										<ControlTemplate>
 											<Label FontWeight="Bold" Content="X" FontSize="14" />
@@ -74,7 +80,7 @@
 								</Grid.ColumnDefinitions>
 
 								<TextBlock Grid.Column="0" Text="{Binding Header}" FontSize="14" Foreground="Blue" VerticalAlignment="Center" ToolTip="{Binding BinaryFilePath}" />
-								<Button Grid.Column="2" Command="{Binding Path=DataContext.CloseTabCommand, ElementName=tabControl}" CommandParameter="{Binding}">
+								<Button Grid.Column="2" MinWidth="0" Command="{Binding Path=DataContext.CloseTabCommand, ElementName=tabControl}" CommandParameter="{Binding}">
 									<Button.Template>
 										<ControlTemplate>
 											<Label FontWeight="Bold" Content="X" FontSize="14" />

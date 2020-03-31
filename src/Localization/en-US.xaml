@@ -9,12 +9,20 @@
 	<system:String x:Key="MainMenu_File_SaveTemplate">Template speichern</system:String>
 	<system:String x:Key="MainMenu_File_Close">Beenden</system:String>
 
-	<system:String x:Key="BinaryTemplateProperties_Header">Eigenschaften</system:String>
-	<system:String x:Key="BinaryTemplateProperties_Name">Name</system:String>
+	<system:String x:Key="BinaryTemplateProperties_DialogTitle_Section">Sektion editieren</system:String>
+	<system:String x:Key="BinaryTemplateProperties_DialogTitle_Value">Wert editieren</system:String>
+	<system:String x:Key="BinaryTemplateProperties_PartName">Name</system:String>
 	<system:String x:Key="BinaryTemplateProperties_Type">Datentyp</system:String>
+	<system:String x:Key="BinaryTemplate_Name">Name:</system:String>
+	<system:String x:Key="BinaryTemplate_LoopSettings">Sektion wiederholen</system:String>
+	<system:String x:Key="BinaryTemplate_LoopSettings_None">Aus</system:String>
+	<system:String x:Key="BinaryTemplate_LoopSettings_Fixed">Feste Anzahl:</system:String>
+	<system:String x:Key="BinaryTemplate_LoopSettings_Reference">Anzahl aus Wert auslesen:</system:String>
+	<system:String x:Key="BinaryTemplate_FilePattern">Pattern für Dateinamen:</system:String>
 
 	<system:String x:Key="Dialog_Open">Öffnen</system:String>
 	<system:String x:Key="Dialog_Cancel">Abbrechen</system:String>
+	<system:String x:Key="Dialog_OK">OK</system:String>
 
 	<system:String x:Key="SelectTemplate">Template auswählen</system:String>
 	<system:String x:Key="SaveTemplate">Template speichern</system:String>

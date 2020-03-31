@@ -6,36 +6,49 @@
 	xmlns:local="clr-namespace:BinaryDataReaderApp" 
 	xmlns:system="clr-namespace:System;assembly=mscorlib" 
 	xmlns:controls="clr-namespace:BinaryDataReaderApp.Controls" 
-	xmlns:converters="clr-namespace:BinaryDataReaderApp.Converters"
-	xmlns:models="clr-namespace:BinaryDataReaderApp.Models" mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
+	xmlns:converters="clr-namespace:BinaryDataReaderApp.Converters" 
+	xmlns:models="clr-namespace:BinaryDataReaderApp.Models" DataContextChanged="OnDataContextChanged" mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
 
 	<UserControl.Resources>
-		<ObjectDataProvider x:Key="binaryValueTypeEnum" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
-			<ObjectDataProvider.MethodParameters>
-				<x:Type TypeName="models:BinaryValueType"/>
-			</ObjectDataProvider.MethodParameters>
-		</ObjectDataProvider>
-
-		<converters:BinaryValueTypeToBooleanConverter x:Key="binaryValueTypeToBooleanConverter" />
-		<converters:BinarySectionTypeToBooleanConverter x:Key="binarySectionTypeToBooleanConverter" />
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="../Resources/Styles.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
 	</UserControl.Resources>
 
-	<Grid>
+	<Grid Margin="4">
 		<Grid.RowDefinitions>
+			<RowDefinition Height="40" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="3*" />
-			<ColumnDefinition Width="1*" />
+			<ColumnDefinition Width="*" />
 		</Grid.ColumnDefinitions>
 
-		<controls:CustomTreeView Grid.Row="0" Grid.Column="0" SelectedTreeItem="{Binding SelectedPart}" ItemsSource="{Binding BinaryTemplate.Parts}">
+		<StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+			<TextBlock Text="{DynamicResource BinaryTemplate_Name}" VerticalAlignment="Center" FontWeight="Bold" />
+			<TextBox Text="{Binding BinaryTemplate.Name}" Margin="7,0,0,0" Width="200" />
+
+			<TextBlock Text="{DynamicResource BinaryTemplate_FilePattern}" Margin="15,0,0,0" VerticalAlignment="Center" FontWeight="Bold" />
+			<TextBox Text="{Binding BinaryTemplate.FilePattern}" Margin="7,0,10,0" Width="150" />
+		</StackPanel>
+
+		<controls:CustomTreeView Grid.Row="1" Grid.Column="0" x:Name="treeViewTemplate" SelectedTreeItem="{Binding SelectedPart}" ItemsSource="{Binding BinaryTemplate.Parts}">
 			<TreeView.Resources>
 				<HierarchicalDataTemplate DataType="{x:Type models:BinarySection}" ItemsSource="{Binding Parts}">
-					<TextBlock Text="{Binding Name}" />
+					<TextBlock Text="{Binding Name}">
+						<TextBlock.InputBindings>
+							<MouseBinding Command="{Binding DataContext.ShowDetailsCommand, ElementName=treeViewTemplate}" CommandParameter="{Binding}" MouseAction="LeftDoubleClick"/>
+						</TextBlock.InputBindings>
+					</TextBlock>
 				</HierarchicalDataTemplate>
 				<DataTemplate DataType="{x:Type models:BinaryValue}">
 					<TextBlock>
+						<TextBlock.InputBindings>
+							<MouseBinding Command="{Binding DataContext.ShowDetailsCommand, ElementName=treeViewTemplate}" CommandParameter="{Binding}" MouseAction="LeftDoubleClick"/>
+						</TextBlock.InputBindings>
+
 						<Run Text="{Binding Name}" />
 						<Run Text=" : " />
 						<Run Text="{Binding ValueType}" FontWeight="bold" />
@@ -43,27 +56,5 @@
 				</DataTemplate>
 			</TreeView.Resources>
 		</controls:CustomTreeView>
-
-		<Grid Grid.Row="0" Grid.Column="1">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="*" />
-			</Grid.RowDefinitions>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto" />
-				<ColumnDefinition Width="5" />
-				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
-
-			<Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Content="{DynamicResource BinaryTemplateProperties_Header}" />
-
-			<Label Grid.Row="1" Grid.Column="0" Content="{DynamicResource BinaryTemplateProperties_Name}" />
-			<TextBox Grid.Row="1" Grid.Column="2" Text="{Binding SelectedPart.Name}" />
-
-			<Label Grid.Row="2" Grid.Column="0" Content="{DynamicResource BinaryTemplateProperties_Type}" IsEnabled="{Binding Path=SelectedPart, Converter={StaticResource binaryValueTypeToBooleanConverter}}" />
-			<ComboBox Grid.Row="2" Grid.Column="2" ItemsSource="{Binding Source={StaticResource binaryValueTypeEnum}}" SelectedItem="{Binding SelectedPart.ValueType}" IsEnabled="{Binding Path=SelectedPart, Converter={StaticResource binaryValueTypeToBooleanConverter}}" />
-		</Grid>
 	</Grid>
 </UserControl>
