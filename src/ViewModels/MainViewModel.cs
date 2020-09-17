@@ -195,7 +195,7 @@ namespace BinaryDataReaderApp.ViewModels
 
 		private bool SaveTemplateCommand_CanExecute(object parameter)
 		{
-			if (TabVMs.Count > SelectedTabIndex)
+			if ((SelectedTabIndex > -1) && (SelectedTabIndex < TabVMs.Count))
 			{
 				return (TabVMs[SelectedTabIndex] is BinaryTemplateTabViewModel);
 			}
