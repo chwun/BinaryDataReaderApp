@@ -170,8 +170,12 @@ namespace BinaryDataReaderApp.Models
 			{
 				switch (converter)
 				{
-					case EnumToStringConverter c:
-						xmlConverters.Add(CreateXML_EnumStringConverter(c));
+					case EnumToStringConverter enumConverter:
+						xmlConverters.Add(CreateXML_EnumStringConverter(enumConverter));
+						break;
+
+					case IntAsciiConverter asciiConverter:
+						xmlConverters.Add(CreateXML_IntAsciiConverter(asciiConverter));
 						break;
 
 					default:
@@ -195,6 +199,14 @@ namespace BinaryDataReaderApp.Models
 
 				xmlConverter.Add(xmlEnumValue);
 			}
+
+			return xmlConverter;
+		}
+
+		private XElement CreateXML_IntAsciiConverter(IntAsciiConverter c)
+		{
+			XElement xmlConverter = new XElement(Constants.TemplateXML_IntAsciiConverter);
+			xmlConverter.Add(new XAttribute(Constants.TemplateXML_Name, c.Name));
 
 			return xmlConverter;
 		}
@@ -254,6 +266,10 @@ namespace BinaryDataReaderApp.Models
 			{
 				ParseEnumStringConverter(element);
 			}
+			else if (element.Name == Constants.TemplateXML_IntAsciiConverter)
+			{
+				ParseIntAsciiConverter(element);
+			}
 		}
 
 		private void ParseEnumStringConverter(XElement element)
@@ -268,6 +284,14 @@ namespace BinaryDataReaderApp.Models
 
 				converter.AddMapping(value, text);
 			}
+
+			converters.Add(converter);
+		}
+
+		private void ParseIntAsciiConverter(XElement element)
+		{
+			string name = element.Attribute(Constants.TemplateXML_Name).Value;
+			IntAsciiConverter converter = new IntAsciiConverter(name);
 
 			converters.Add(converter);
 		}
