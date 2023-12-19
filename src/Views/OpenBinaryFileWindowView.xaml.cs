@@ -1,37 +1,27 @@
-using System;
-using System.Globalization;
-using System.Threading;
-using System.Windows;
-using BinaryDataReaderApp.Localization;
 using BinaryDataReaderApp.ViewModels;
-using Microsoft.Win32;
+using System.Windows;
 
-namespace BinaryDataReaderApp.Views
+namespace BinaryDataReaderApp.Views;
+
+/// <summary>
+/// Interaction logic for OpenBinaryFileWindowView.xaml
+/// </summary>
+public partial class OpenBinaryFileWindowView : Window
 {
-    /// <summary>
-    /// Interaction logic for OpenBinaryFileWindowView.xaml
-    /// </summary>
-    public partial class OpenBinaryFileWindowView : Window
-    {
-        public OpenBinaryFileWindowViewModel ViewModel
-        {
-            get;
-            protected set;
-        }
+	public OpenBinaryFileWindowView()
+	{
+		InitializeComponent();
 
-        public OpenBinaryFileWindowView()
-        {
-            InitializeComponent();
+		ViewModel = new();
+		DataContext = ViewModel;
 
-            ViewModel = new OpenBinaryFileWindowViewModel();
-            DataContext = ViewModel;
+		ViewModel.CloseRequested += OnCloseRequested;
+	}
 
-            ViewModel.CloseRequested += OnCloseRequested;
-        }
+	public OpenBinaryFileWindowViewModel ViewModel { get; protected set; }
 
-        private void OnCloseRequested(object sender, EventArgs e)
-        {
-            Close();
-        }
-    }
+	private void OnCloseRequested(object sender, EventArgs e)
+	{
+		Close();
+	}
 }

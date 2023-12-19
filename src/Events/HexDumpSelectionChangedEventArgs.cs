@@ -1,10 +1,8 @@
-using System;
 using BinaryDataReaderApp.Models;
 
-namespace BinaryDataReaderApp.Events
+namespace BinaryDataReaderApp.Events;
+
+public class HexDumpSelectionChangedEventArgs : EventArgs
 {
-    public class HexDumpSelectionChangedEventArgs : EventArgs
-    {
-        public HexDumpLine SelectedHexDumpLine;
-    }
+	public HexDumpLine SelectedHexDumpLine;
 }

@@ -1,105 +1,100 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Windows;
 using BinaryDataReaderApp.Events;
 using BinaryDataReaderApp.Localization;
 using BinaryDataReaderApp.ViewModels;
 using Microsoft.Win32;
+using System.Globalization;
+using System.Windows;
 
-namespace BinaryDataReaderApp.Views
+namespace BinaryDataReaderApp.Views;
+
+/// <summary>
+/// Interaction logic for MainWindowView.xaml
+/// </summary>
+public partial class MainWindowView : Window
 {
+	protected MainViewModel ViewModel;
 
-	/// <summary>
-	/// Interaction logic for MainWindowView.xaml
-	/// </summary>
-	public partial class MainWindowView : Window
+	public MainWindowView()
 	{
-		public static MainWindowView MainWindowInstance {get; private set;}
+		InitializeComponent();
 
-		protected MainViewModel ViewModel;
+		MainWindowInstance = this;
 
-		public MainWindowView()
+		TranslationManager.SetLanguage(CultureInfo.GetCultureInfo("en-US")); // TODO - Workaround für Bug TabControl!!!
+
+		ViewModel = new();
+		DataContext = ViewModel;
+
+		ViewModel.FileDialogRequested += OnFileDialogRequested;
+		ViewModel.CloseRequested += OnCloseRequested;
+		// ViewModel.OpenBinaryFileWindowRequested += OnOpenBinaryFileWindowRequested;
+	}
+
+	public static MainWindowView MainWindowInstance { get; private set; }
+
+	private void OnFileDialogRequested(object sender, FileDialogEventArgs e)
+	{
+		OpenFileDialog dlg = new()
 		{
-			InitializeComponent();
+			Title = e.Title,
+			Filter = e.Filter
+		};
 
-			MainWindowInstance = this;
-
-			TranslationManager.Instance.SetLanguage(CultureInfo.GetCultureInfo("en-US")); // TODO - Workaround für Bug TabControl!!!
-
-			ViewModel = new MainViewModel();
-			DataContext = ViewModel;
-
-			ViewModel.FileDialogRequested += OnFileDialogRequested;
-			ViewModel.CloseRequested += OnCloseRequested;
-			// ViewModel.OpenBinaryFileWindowRequested += OnOpenBinaryFileWindowRequested;
+		if (dlg.ShowDialog() == true)
+		{
+			e.File = dlg.FileName;
 		}
+	}
 
-		private void OnFileDialogRequested(object sender, FileDialogEventArgs e)
+	private void OnCloseRequested(object sender, EventArgs e)
+	{
+		Close();
+	}
+
+	private void OnOpenBinaryFileWindowRequested(object sender, OpenBinaryFileWindowEventArgs e)
+	{
+		OpenBinaryFileWindowView openBinaryFileWindow = new();
+
+		openBinaryFileWindow.ShowDialog();
+		bool dialogResult = openBinaryFileWindow.ViewModel.DialogResult;
+
+		if (dialogResult)
 		{
-			OpenFileDialog dlg = new OpenFileDialog()
-			{
-				Title = e.Title,
-				Filter = e.Filter
-			};
-
-			if (dlg.ShowDialog() == true)
-			{
-				e.File = dlg.FileName;
-			}
+			e.BinaryFilePath = "";
+			e.TemplatePath = "";
+			e.DialogResult = true;
 		}
-
-		private void OnCloseRequested(object sender, EventArgs e)
+		else
 		{
-			Close();
+			e.BinaryFilePath = "";
+			e.TemplatePath = "";
+			e.DialogResult = false;
 		}
+	}
 
-		private void OnOpenBinaryFileWindowRequested(object sender, OpenBinaryFileWindowEventArgs e)
+	private void Window_DragEnter(object sender, DragEventArgs e)
+	{
+		if (e.Data.GetDataPresent(DataFormats.FileDrop))
 		{
-			OpenBinaryFileWindowView openBinaryFileWindow = new OpenBinaryFileWindowView();
-
-			openBinaryFileWindow.ShowDialog();
-			bool dialogResult = openBinaryFileWindow.ViewModel.DialogResult;
-
-			if (dialogResult)
-			{
-				e.BinaryFilePath = "";
-				e.TemplatePath = "";
-				e.DialogResult = true;
-			}
-			else
-			{
-				e.BinaryFilePath = "";
-				e.TemplatePath = "";
-				e.DialogResult = false;
-			}
+			e.Effects = DragDropEffects.Copy;
 		}
-
-		private void Window_DragEnter(object sender, DragEventArgs e)
+		else
 		{
-			if (e.Data.GetDataPresent(DataFormats.FileDrop))
-			{
-				e.Effects = DragDropEffects.Copy;
-			}
-			else
-			{
-				e.Effects = DragDropEffects.None;
-			}
+			e.Effects = DragDropEffects.None;
 		}
+	}
 
-		private void Window_Drop(object sender, DragEventArgs e)
+	private void Window_Drop(object sender, DragEventArgs e)
+	{
+		if (e.Data.GetDataPresent(DataFormats.FileDrop))
 		{
-			if (e.Data.GetDataPresent(DataFormats.FileDrop))
-			{
-				string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
+			string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
 
-				if ((files != null) && files.Any())
+			if (files != null && files.Any())
+			{
+				if (ViewModel.OpenBinaryFileCommand.CanExecute(files[0]))
 				{
-					if (ViewModel.OpenBinaryFileCommand.CanExecute(files[0]))
-					{
-						ViewModel.OpenBinaryFileCommand.Execute(files[0]);
-					}
+					ViewModel.OpenBinaryFileCommand.Execute(files[0]);
 				}
 			}
 		}

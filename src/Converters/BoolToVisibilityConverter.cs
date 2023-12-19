@@ -1,22 +1,17 @@
-using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace BinaryDataReaderApp.Converters
+namespace BinaryDataReaderApp.Converters;
+
+public class BoolToVisibilityConverter : IValueConverter
 {
-    public class BoolToVisibilityConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            bool visible = (bool)value;
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+	{
+		bool visible = (bool)value;
 
-            return (visible ? Visibility.Visible : Visibility.Collapsed);
-        }
+		return visible ? Visibility.Visible : Visibility.Collapsed;
+	}
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
 }

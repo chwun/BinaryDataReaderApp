@@ -1,16 +1,15 @@
-namespace BinaryDataReaderApp.Models
+namespace BinaryDataReaderApp.Models;
+
+public enum BinaryValueType
 {
-	public enum BinaryValueType
-	{
-		BYTE,
-		SHORT,
-		USHORT,
-		INT,
-		UINT,
-		LONG,
-		ULONG,
-		BOOL,
-		FLOAT,
-		DOUBLE
-	}
+	BYTE,
+	SHORT,
+	USHORT,
+	INT,
+	UINT,
+	LONG,
+	ULONG,
+	BOOL,
+	FLOAT,
+	DOUBLE
 }

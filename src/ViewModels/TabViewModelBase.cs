@@ -1,25 +1,21 @@
-namespace BinaryDataReaderApp.ViewModels
+namespace BinaryDataReaderApp.ViewModels;
+
+public abstract class TabViewModelBase : ViewModelBase
 {
-	public abstract class TabViewModelBase : ViewModelBase
+	protected string header;
+
+	public TabViewModelBase(string header)
 	{
-		protected string header;
+		Header = header;
+	}
 
-		public string Header
+	public string Header
+	{
+		get => header;
+		set
 		{
-			get
-			{
-				return header;
-			}
-			set
-			{
-				header = value;
-				OnPropertyChanged();
-			}
-		}
-
-		public TabViewModelBase(string header)
-		{
-			Header = header;
+			header = value;
+			OnPropertyChanged();
 		}
 	}
 }

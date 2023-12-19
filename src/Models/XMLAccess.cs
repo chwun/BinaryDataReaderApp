@@ -1,38 +1,34 @@
 using System.Xml.Linq;
 
-namespace BinaryDataReaderApp.Models
+namespace BinaryDataReaderApp.Models;
+
+/// <summary>
+/// Class for providing read/write access to an XML file. Implements interface <see cref="IXMLAccess" />.
+/// </summary>
+public class XMLAccess : IXMLAccess
 {
+	private readonly string path;
+
 	/// <summary>
-	/// Class for providing read/write access to an XML file. Implements interface <see cref="IXMLAccess"/>.
+	/// Creates a new instance of XMLAccess
 	/// </summary>
-	public class XMLAccess : IXMLAccess
+	/// <param name="path">path of XML file</param>
+	public XMLAccess(string path)
 	{
-		private string path;
+		this.path = path;
+	}
 
-		/// <summary>
-		/// Creates a new instance of XMLAccess
-		/// </summary>
-		/// <param name="path">path of XML file</param>
-		public XMLAccess(string path)
-		{
-			this.path = path;
-		}
+	/// <summary>
+	/// Reads XML data
+	/// </summary>
+	public XElement ReadXMLData() => XElement.Load(path);
 
-		/// <summary>
-		/// Reads XML data
-		/// </summary>
-		public XElement ReadXMLData()
-		{
-			return XElement.Load(path);
-		}
-
-		/// <summary>
-		/// Writes XML data
-		/// </summary>
-		/// <param name="data">XML data to write</param>
-		public void WriteXMLData(XElement data)
-		{
-			data.Save(path);
-		}
+	/// <summary>
+	/// Writes XML data
+	/// </summary>
+	/// <param name="data">XML data to write</param>
+	public void WriteXMLData(XElement data)
+	{
+		data.Save(path);
 	}
 }

@@ -1,21 +1,20 @@
 using System.Xml.Linq;
 
-namespace BinaryDataReaderApp.Models
+namespace BinaryDataReaderApp.Models;
+
+/// <summary>
+/// Interface for providing access to an XML file
+/// </summary>
+public interface IXMLAccess
 {
 	/// <summary>
-	/// Interface for providing access to an XML file
+	/// Reads XML data
 	/// </summary>
-	public interface IXMLAccess
-	{
-		/// <summary>
-		/// Reads XML data
-		/// </summary>
-		XElement ReadXMLData();
+	XElement ReadXMLData();
 
-		/// <summary>
-		/// Writes XML data
-		/// </summary>
-		/// <param name="data">XML data to write</param>
-		void WriteXMLData(XElement data);
-	}
+	/// <summary>
+	/// Writes XML data
+	/// </summary>
+	/// <param name="data">XML data to write</param>
+	void WriteXMLData(XElement data);
 }

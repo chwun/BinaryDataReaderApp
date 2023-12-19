@@ -1,45 +1,44 @@
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-	xmlns:system="clr-namespace:System;assembly=mscorlib">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
 
-	<system:String x:Key="MainMenu_File">Datei</system:String>
-	<system:String x:Key="MainMenu_File_OpenBinary">Binärdatei öffnen</system:String>
-	<system:String x:Key="MainMenu_File_NewTemplate">Neues Template</system:String>
-	<system:String x:Key="MainMenu_File_OpenTemplate">Template öffnen</system:String>
-	<system:String x:Key="MainMenu_File_SaveTemplate">Template speichern</system:String>
-	<system:String x:Key="MainMenu_File_Close">Beenden</system:String>
+    <system:String x:Key="MainMenu_File">Datei</system:String>
+    <system:String x:Key="MainMenu_File_OpenBinary">Binärdatei öffnen</system:String>
+    <system:String x:Key="MainMenu_File_NewTemplate">Neues Template</system:String>
+    <system:String x:Key="MainMenu_File_OpenTemplate">Template öffnen</system:String>
+    <system:String x:Key="MainMenu_File_SaveTemplate">Template speichern</system:String>
+    <system:String x:Key="MainMenu_File_Close">Beenden</system:String>
 
-	<system:String x:Key="BinaryTemplateProperties_DialogTitle_Section">Sektion editieren</system:String>
-	<system:String x:Key="BinaryTemplateProperties_DialogTitle_Value">Wert editieren</system:String>
-	<system:String x:Key="BinaryTemplateProperties_PartName">Name</system:String>
-	<system:String x:Key="BinaryTemplateProperties_Type">Datentyp</system:String>
-	<system:String x:Key="BinaryTemplate_Name">Name:</system:String>
-	<system:String x:Key="BinaryTemplate_LoopSettings">Sektion wiederholen</system:String>
-	<system:String x:Key="BinaryTemplate_LoopSettings_None">Aus</system:String>
-	<system:String x:Key="BinaryTemplate_LoopSettings_Fixed">Feste Anzahl:</system:String>
-	<system:String x:Key="BinaryTemplate_LoopSettings_Reference">Anzahl aus Wert auslesen:</system:String>
-	<system:String x:Key="BinaryTemplate_FilePattern">Pattern für Dateinamen:</system:String>
+    <system:String x:Key="BinaryTemplateProperties_DialogTitle_Section">Sektion editieren</system:String>
+    <system:String x:Key="BinaryTemplateProperties_DialogTitle_Value">Wert editieren</system:String>
+    <system:String x:Key="BinaryTemplateProperties_PartName">Name</system:String>
+    <system:String x:Key="BinaryTemplateProperties_Type">Datentyp</system:String>
+    <system:String x:Key="BinaryTemplate_Name">Name:</system:String>
+    <system:String x:Key="BinaryTemplate_LoopSettings">Sektion wiederholen</system:String>
+    <system:String x:Key="BinaryTemplate_LoopSettings_None">Aus</system:String>
+    <system:String x:Key="BinaryTemplate_LoopSettings_Fixed">Feste Anzahl:</system:String>
+    <system:String x:Key="BinaryTemplate_LoopSettings_Reference">Anzahl aus Wert auslesen:</system:String>
+    <system:String x:Key="BinaryTemplate_FilePattern">Pattern für Dateinamen:</system:String>
 
-	<system:String x:Key="Dialog_Open">Öffnen</system:String>
-	<system:String x:Key="Dialog_Cancel">Abbrechen</system:String>
-	<system:String x:Key="Dialog_OK">OK</system:String>
+    <system:String x:Key="Dialog_Open">Öffnen</system:String>
+    <system:String x:Key="Dialog_Cancel">Abbrechen</system:String>
+    <system:String x:Key="Dialog_OK">OK</system:String>
 
-	<system:String x:Key="SelectTemplate">Template auswählen</system:String>
-	<system:String x:Key="SaveTemplate">Template speichern</system:String>
-	<system:String x:Key="SelectBinaryFile">Binärdatei auswählen</system:String>
-	<system:String x:Key="FileDialogFilter_Templates">Templates</system:String>
-	<system:String x:Key="FileDialogFilter_Binary">Binärdateien</system:String>
+    <system:String x:Key="SelectTemplate">Template auswählen</system:String>
+    <system:String x:Key="SaveTemplate">Template speichern</system:String>
+    <system:String x:Key="SelectBinaryFile">Binärdatei auswählen</system:String>
+    <system:String x:Key="FileDialogFilter_Templates">Templates</system:String>
+    <system:String x:Key="FileDialogFilter_Binary">Binärdateien</system:String>
 
-	<system:String x:Key="BinaryFile_ByteOffset">Byte-Offset</system:String>
-	<system:String x:Key="BinaryFile_Value">Wert</system:String>
-	<system:String x:Key="BinaryFile_FileSize">Dateigröße:</system:String>
-	<system:String x:Key="BinaryFile_FileStatus">Status:</system:String>
-	<system:String x:Key="BinaryFile_Template">Template:</system:String>
+    <system:String x:Key="BinaryFile_ByteOffset">Byte-Offset</system:String>
+    <system:String x:Key="BinaryFile_Value">Wert</system:String>
+    <system:String x:Key="BinaryFile_FileSize">Dateigröße:</system:String>
+    <system:String x:Key="BinaryFile_FileStatus">Status:</system:String>
+    <system:String x:Key="BinaryFile_Template">Template:</system:String>
 
-	<system:String x:Key="BinaryFile_NoErrors">Keine Fehler</system:String>
-	<system:String x:Key="BinaryFile_Error">Allgemeiner Fehler beim Einlesen der Datei</system:String>
-	<system:String x:Key="BinaryFile_ValueError">Fehlerhafter Wert für</system:String>
-	<system:String x:Key="BinaryFile_EndOfStreamError">EndOfStreamException: Die Datei ist kürzer als im Template definiert!</system:String>
-	<system:String x:Key="BinaryFile_FileTooLongError">Die Datei ist länger als im Template definiert!</system:String>
-
+    <system:String x:Key="BinaryFile_NoErrors">Keine Fehler</system:String>
+    <system:String x:Key="BinaryFile_Error">Allgemeiner Fehler beim Einlesen der Datei</system:String>
+    <system:String x:Key="BinaryFile_ValueError">Fehlerhafter Wert für</system:String>
+    <system:String x:Key="BinaryFile_EndOfStreamError">EndOfStreamException: Die Datei ist kürzer als im Template definiert!</system:String>
+    <system:String x:Key="BinaryFile_FileTooLongError">Die Datei ist länger als im Template definiert!</system:String>
 </ResourceDictionary>

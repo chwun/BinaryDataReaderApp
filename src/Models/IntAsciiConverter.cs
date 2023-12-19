@@ -1,30 +1,27 @@
-using System;
-using System.Linq;
 using System.Text;
 
-namespace BinaryDataReaderApp.Models
+namespace BinaryDataReaderApp.Models;
+
+public class IntAsciiConverter : IntToStringConverter
 {
-	public class IntAsciiConverter : IntToStringConverter
+	public IntAsciiConverter(string name)
 	{
-		public IntAsciiConverter(string name)
+		Name = name;
+	}
+
+	public override void AddMapping(int value, string text)
+	{
+	}
+
+	public override string GetText(int value)
+	{
+		if (value > 255)
 		{
-			Name = name;
+			throw new ArgumentException($"{value} is no valid ASCII value!");
 		}
 
-		public override void AddMapping(int value, string text)
-		{
-		}
+		byte[] asciiByte = BitConverter.GetBytes(value).Take(1).ToArray();
 
-		public override string GetText(int value)
-		{
-			if (value > 255)
-			{
-				throw new ArgumentException($"{value} is no valid ASCII value!");
-			}
-
-			byte[] asciiByte = BitConverter.GetBytes(value).Take(1).ToArray();
-
-			return Encoding.ASCII.GetString(asciiByte);
-		}
+		return Encoding.ASCII.GetString(asciiByte);
 	}
 }

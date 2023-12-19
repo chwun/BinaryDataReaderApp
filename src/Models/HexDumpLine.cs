@@ -1,57 +1,46 @@
-using System.Collections.Generic;
+namespace BinaryDataReaderApp.Models;
 
-namespace BinaryDataReaderApp.Models
+public class HexDumpLine : ModelBase
 {
-	public class HexDumpLine : ModelBase
+	private int byteOffset;
+	private List<HexDumpByte> hexBytes;
+
+	public HexDumpLine(int byteOffset)
 	{
-		private int byteOffset;
-		private List<HexDumpByte> hexBytes;
+		ByteOffset = byteOffset;
+		HexBytes = new();
+	}
 
-		public int ByteOffset
+	public int ByteOffset
+	{
+		get => byteOffset;
+		private set
 		{
-			get
-			{
-				return byteOffset;
-			}
-			private set
-			{
-				byteOffset = value;
-				OnPropertyChanged();
-			}
+			byteOffset = value;
+			OnPropertyChanged();
 		}
+	}
 
-		public List<HexDumpByte> HexBytes
+	public List<HexDumpByte> HexBytes
+	{
+		get => hexBytes;
+		private set
 		{
-			get
-			{
-				return hexBytes;
-			}
-			private set
-			{
-				hexBytes = value;
-				OnPropertyChanged();
-			}
+			hexBytes = value;
+			OnPropertyChanged();
 		}
+	}
 
-		public HexDumpByte this[int i]
+	public HexDumpByte this[int i]
+	{
+		get
 		{
-			get
+			if (HexBytes.Count > i)
 			{
-				if (HexBytes.Count > i)
-				{
-					return HexBytes[i];
-				}
-				else
-				{
-					return HexDumpByte.UnusedByte;
-				}
+				return HexBytes[i];
 			}
-		}
 
-		public HexDumpLine(int byteOffset)
-		{
-			ByteOffset = byteOffset;
-			HexBytes = new List<HexDumpByte>();
+			return HexDumpByte.UnusedByte;
 		}
 	}
 }

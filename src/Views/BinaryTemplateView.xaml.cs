@@ -1,43 +1,35 @@
-using System;
-using System.Windows;
-using System.Windows.Controls;
 using BinaryDataReaderApp.Events;
 using BinaryDataReaderApp.ViewModels;
+using System.Windows;
+using System.Windows.Controls;
 
-namespace BinaryDataReaderApp.Views
+namespace BinaryDataReaderApp.Views;
+
+/// <summary>
+/// Interaction logic for BinaryTemplateView.xaml
+/// </summary>
+public partial class BinaryTemplateView : UserControl
 {
-	/// <summary>
-	/// Interaction logic for BinaryTemplateView.xaml
-	/// </summary>
-	public partial class BinaryTemplateView : UserControl
+	public BinaryTemplateView()
 	{
-		protected BinaryTemplateTabViewModel ViewModel
-		{
-			get
-			{
-				return DataContext as BinaryTemplateTabViewModel;
-			}
-		}
+		InitializeComponent();
+	}
 
-		public BinaryTemplateView()
-		{
-			InitializeComponent();
-		}
+	protected BinaryTemplateTabViewModel ViewModel => DataContext as BinaryTemplateTabViewModel;
 
-		private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+	private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+	{
+		if (ViewModel != null)
 		{
-			if (ViewModel != null)
-			{
-				ViewModel.TemplatePartDetailsWindowRequested += OnTemplatePartDetailsWindowRequested;
-			}
+			ViewModel.TemplatePartDetailsWindowRequested += OnTemplatePartDetailsWindowRequested;
 		}
+	}
 
-		private void OnTemplatePartDetailsWindowRequested(object sender, TemplatePartDetailsWindowEventArgs e)
-		{
-			TemplatePartDetailsWindowView templatePartDetailsWindow = new TemplatePartDetailsWindowView(e);
-			templatePartDetailsWindow.Owner = MainWindowView.MainWindowInstance;
+	private void OnTemplatePartDetailsWindowRequested(object sender, TemplatePartDetailsWindowEventArgs e)
+	{
+		TemplatePartDetailsWindowView templatePartDetailsWindow = new(e);
+		templatePartDetailsWindow.Owner = MainWindowView.MainWindowInstance;
 
-			templatePartDetailsWindow.ShowDialog();
-		}
+		templatePartDetailsWindow.ShowDialog();
 	}
 }

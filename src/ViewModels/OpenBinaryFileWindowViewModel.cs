@@ -1,91 +1,75 @@
-using System;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 using BinaryDataReaderApp.Common;
-using BinaryDataReaderApp.Models;
+using System.Windows.Input;
 
-namespace BinaryDataReaderApp.ViewModels
+namespace BinaryDataReaderApp.ViewModels;
+
+public class OpenBinaryFileWindowViewModel : ViewModelBase
 {
-    public class OpenBinaryFileWindowViewModel : ViewModelBase
-    {
-        private string templatePath;
-        private string binaryFilePath;
+	private string binaryFilePath;
+	private string templatePath;
 
-        public string TemplatePath
-        {
-            get
-            {
-                return templatePath;
-            }
-            set
-            {
-                templatePath = value;
-                OnPropertyChanged();
-            }
-        }
+	public string TemplatePath
+	{
+		get => templatePath;
+		set
+		{
+			templatePath = value;
+			OnPropertyChanged();
+		}
+	}
 
-        public string BinaryFilePath
-        {
-            get
-            {
-                return binaryFilePath;
-            }
-            set
-            {
-                binaryFilePath = value;
-                OnPropertyChanged();
-            }
-        }
+	public string BinaryFilePath
+	{
+		get => binaryFilePath;
+		set
+		{
+			binaryFilePath = value;
+			OnPropertyChanged();
+		}
+	}
 
-        public bool DialogResult { get; private set; }
+	public bool DialogResult { get; private set; }
 
-        #region events
+	#region events
 
-        public delegate void CloseRequestedEventHandler(object sender, EventArgs e);
-        public event CloseRequestedEventHandler CloseRequested;
+	public delegate void CloseRequestedEventHandler(object sender, EventArgs e);
 
-        #endregion
+	public event CloseRequestedEventHandler CloseRequested;
 
-        public OpenBinaryFileWindowViewModel()
-        {
+	#endregion events
 
-        }
+	#region commands
 
-        #region commands
+	private ICommand okCommand;
 
-        private ICommand okCommand;
-        public ICommand OkCommand
-        {
-            get
-            {
-                if (okCommand == null)
-                {
-                    okCommand = new ActionCommand(OkCommand_Executed, OkCommand_CanExecute);
-                }
+	public ICommand OkCommand
+	{
+		get
+		{
+			if (okCommand == null)
+			{
+				okCommand = new ActionCommand(OkCommand_Executed, OkCommand_CanExecute);
+			}
 
-                return okCommand;
-            }
-        }
+			return okCommand;
+		}
+	}
 
-        #endregion
+	#endregion commands
 
-        #region command handlers
+	#region command handlers
 
-        private bool OkCommand_CanExecute(object parameter)
-        {
-            return true;
-        }
+	private bool OkCommand_CanExecute(object parameter) => true;
 
-        private void OkCommand_Executed(object parameter)
-        {
-            DialogResult = true;
-            CloseRequested?.Invoke(this, null);
-        }
+	private void OkCommand_Executed(object parameter)
+	{
+		DialogResult = true;
+		CloseRequested?.Invoke(this, null);
+	}
 
-        #endregion
+	#endregion command handlers
 
-        #region private methods
-        
-        #endregion
-    }
+	#region private methods
+
+	#endregion private methods
 }

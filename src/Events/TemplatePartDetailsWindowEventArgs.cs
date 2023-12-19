@@ -1,26 +1,24 @@
-using System;
 using BinaryDataReaderApp.Models;
 
-namespace BinaryDataReaderApp.Events
+namespace BinaryDataReaderApp.Events;
+
+public class TemplatePartDetailsWindowEventArgs : EventArgs
 {
-	public class TemplatePartDetailsWindowEventArgs : EventArgs
-	{
-		//----------------
-		// input
-		// ---------------
+	//----------------
+	// input
+	// ---------------
 
-		public BinaryPart Part { get; set; }
+	public BinaryPart Part { get; set; }
 
-		//----------------
-		// output
-		// ---------------
+	//----------------
+	// output
+	// ---------------
 
-		public bool DialogResult { get; set; }
+	public bool DialogResult { get; set; }
 
-		public string PartName { get; set; }
+	public string PartName { get; set; }
 
-		public BinaryValueType ValueType { get; set; }
+	public BinaryValueType ValueType { get; set; }
 
-		public LoopSettings LoopSettings { get; set; }
-	}
+	public LoopSettings LoopSettings { get; set; }
 }

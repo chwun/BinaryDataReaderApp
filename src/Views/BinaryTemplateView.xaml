@@ -1,60 +1,64 @@
-<UserControl x:Class="BinaryDataReaderApp.Views.BinaryTemplateView" 
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-	xmlns:local="clr-namespace:BinaryDataReaderApp" 
-	xmlns:system="clr-namespace:System;assembly=mscorlib" 
-	xmlns:controls="clr-namespace:BinaryDataReaderApp.Controls" 
-	xmlns:converters="clr-namespace:BinaryDataReaderApp.Converters" 
-	xmlns:models="clr-namespace:BinaryDataReaderApp.Models" DataContextChanged="OnDataContextChanged" mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
+<UserControl x:Class="BinaryDataReaderApp.Views.BinaryTemplateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:BinaryDataReaderApp.Controls"
+             xmlns:models="clr-namespace:BinaryDataReaderApp.Models" DataContextChanged="OnDataContextChanged"
+             mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
 
-	<UserControl.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="../Resources/Styles.xaml" />
-			</ResourceDictionary.MergedDictionaries>
-		</ResourceDictionary>
-	</UserControl.Resources>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
-	<Grid Margin="4">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="40" />
-			<RowDefinition Height="*" />
-		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*" />
-		</Grid.ColumnDefinitions>
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-		<StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
-			<TextBlock Text="{DynamicResource BinaryTemplate_Name}" VerticalAlignment="Center" FontWeight="Bold" />
-			<TextBox Text="{Binding BinaryTemplate.Name}" Margin="7,0,0,0" Width="200" />
+        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <TextBlock Text="{DynamicResource BinaryTemplate_Name}" VerticalAlignment="Center" FontWeight="Bold" />
+            <TextBox Text="{Binding BinaryTemplate.Name}" Margin="7,0,0,0" Width="200" />
 
-			<TextBlock Text="{DynamicResource BinaryTemplate_FilePattern}" Margin="15,0,0,0" VerticalAlignment="Center" FontWeight="Bold" />
-			<TextBox Text="{Binding BinaryTemplate.FilePattern}" Margin="7,0,10,0" Width="150" />
-		</StackPanel>
+            <TextBlock Text="{DynamicResource BinaryTemplate_FilePattern}" Margin="15,0,0,0" VerticalAlignment="Center"
+                       FontWeight="Bold" />
+            <TextBox Text="{Binding BinaryTemplate.FilePattern}" Margin="7,0,10,0" Width="150" />
+        </StackPanel>
 
-		<controls:CustomTreeView Grid.Row="1" Grid.Column="0" x:Name="treeViewTemplate" SelectedTreeItem="{Binding SelectedPart}" ItemsSource="{Binding BinaryTemplate.Parts}">
-			<TreeView.Resources>
-				<HierarchicalDataTemplate DataType="{x:Type models:BinarySection}" ItemsSource="{Binding Parts}">
-					<TextBlock Text="{Binding Name}">
-						<TextBlock.InputBindings>
-							<MouseBinding Command="{Binding DataContext.ShowDetailsCommand, ElementName=treeViewTemplate}" CommandParameter="{Binding}" MouseAction="LeftDoubleClick"/>
-						</TextBlock.InputBindings>
-					</TextBlock>
-				</HierarchicalDataTemplate>
-				<DataTemplate DataType="{x:Type models:BinaryValue}">
-					<TextBlock>
-						<TextBlock.InputBindings>
-							<MouseBinding Command="{Binding DataContext.ShowDetailsCommand, ElementName=treeViewTemplate}" CommandParameter="{Binding}" MouseAction="LeftDoubleClick"/>
-						</TextBlock.InputBindings>
+        <controls:CustomTreeView Grid.Row="1" Grid.Column="0" x:Name="treeViewTemplate"
+                                 SelectedTreeItem="{Binding SelectedPart}" ItemsSource="{Binding BinaryTemplate.Parts}">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type models:BinarySection}" ItemsSource="{Binding Parts}">
+                    <TextBlock Text="{Binding Name}">
+                        <TextBlock.InputBindings>
+                            <MouseBinding
+                                Command="{Binding DataContext.ShowDetailsCommand, ElementName=treeViewTemplate}"
+                                CommandParameter="{Binding}" MouseAction="LeftDoubleClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type models:BinaryValue}">
+                    <TextBlock>
+                        <TextBlock.InputBindings>
+                            <MouseBinding
+                                Command="{Binding DataContext.ShowDetailsCommand, ElementName=treeViewTemplate}"
+                                CommandParameter="{Binding}" MouseAction="LeftDoubleClick" />
+                        </TextBlock.InputBindings>
 
-						<Run Text="{Binding Name}" />
-						<Run Text=" : " />
-						<Run Text="{Binding ValueType}" FontWeight="bold" />
-					</TextBlock>
-				</DataTemplate>
-			</TreeView.Resources>
-		</controls:CustomTreeView>
-	</Grid>
+                        <Run Text="{Binding Name}" />
+                        <Run Text=" : " />
+                        <Run Text="{Binding ValueType}" FontWeight="bold" />
+                    </TextBlock>
+                </DataTemplate>
+            </TreeView.Resources>
+        </controls:CustomTreeView>
+    </Grid>
 </UserControl>

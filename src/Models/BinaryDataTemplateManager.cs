@@ -1,143 +1,138 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace BinaryDataReaderApp.Models
+namespace BinaryDataReaderApp.Models;
+
+public class BinaryDataTemplateManager
 {
-	public class BinaryDataTemplateManager
+	private readonly Dictionary<string, DateTime?> filesTimestamps;
+	private readonly string templateDirectory;
+	private readonly Dictionary<string, BinaryDataTemplate> templates;
+
+	public BinaryDataTemplateManager(string templateDirectory)
 	{
-		private string templateDirectory;
-		private Dictionary<string, BinaryDataTemplate> templates;
-		private Dictionary<string, DateTime?> filesTimestamps;
+		this.templateDirectory = templateDirectory;
+		templates = new();
+		filesTimestamps = new();
+	}
 
-		public BinaryDataTemplateManager(string templateDirectory)
+	public BinaryDataTemplate GetMatchingTemplate(string binaryFilename)
+	{
+		RefreshTemplatesDirectory();
+
+		try
 		{
-			this.templateDirectory = templateDirectory;
-			templates = new Dictionary<string, BinaryDataTemplate>();
-			filesTimestamps = new Dictionary<string, DateTime?>();
-		}
-
-		public BinaryDataTemplate GetMatchingTemplate(string binaryFilename)
-		{
-			RefreshTemplatesDirectory();
-
-			try
+			foreach (BinaryDataTemplate template in templates.Values)
 			{
-				foreach (BinaryDataTemplate template in templates.Values)
+				if (!string.IsNullOrWhiteSpace(template.FilePattern))
 				{
-					if (!string.IsNullOrWhiteSpace(template.FilePattern))
+					Match match = Regex.Match(binaryFilename, template.FilePattern);
+					if (match.Success)
 					{
-						Match match = Regex.Match(binaryFilename, template.FilePattern);
-						if (match.Success)
-						{
-							return template;
-						}
+						return template;
 					}
 				}
 			}
-			catch
-			{
-			}
-
-			return null;
+		}
+		catch
+		{
 		}
 
-		public BinaryDataTemplate GetTemplate(string templateFile)
-		{
-			if (!string.IsNullOrWhiteSpace(templateFile))
-			{
-				if (filesTimestamps.ContainsKey(templateFile))
-				{
-					DateTime fileLastWrite = GetFileLastWriteTimestamp(templateFile);
+		return null;
+	}
 
-					if (fileLastWrite > filesTimestamps[templateFile])
+	public BinaryDataTemplate GetTemplate(string templateFile)
+	{
+		if (!string.IsNullOrWhiteSpace(templateFile))
+		{
+			if (filesTimestamps.ContainsKey(templateFile))
+			{
+				DateTime fileLastWrite = GetFileLastWriteTimestamp(templateFile);
+
+				if (fileLastWrite > filesTimestamps[templateFile])
+				{
+					ReadTemplateFile(templateFile);
+				}
+			}
+			else
+			{
+				ReadTemplateFile(templateFile);
+			}
+
+			return templates[templateFile];
+		}
+
+		return null;
+	}
+
+	private void RefreshTemplatesDirectory()
+	{
+		var files = GetChangedTemplateFiles(templateDirectory);
+		foreach (string file in files)
+		{
+			ReadTemplateFile(file);
+		}
+	}
+
+	private List<string> GetChangedTemplateFiles(string directory)
+	{
+		var changedFiles = new List<string>();
+
+		try
+		{
+			string[] files = Directory.GetFiles(directory, "*.xml");
+
+			foreach (string file in files)
+			{
+				DateTime fileLastWrite = GetFileLastWriteTimestamp(file);
+
+				if (filesTimestamps.TryGetValue(file, out var fileTimestamp) && fileTimestamp != null)
+				{
+					if (fileLastWrite > fileTimestamp)
 					{
-						ReadTemplateFile(templateFile);
+						// file has changed:
+						changedFiles.Add(file);
 					}
 				}
 				else
 				{
-					ReadTemplateFile(templateFile);
-				}
-
-				return templates[templateFile];
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		private void RefreshTemplatesDirectory()
-		{
-			List<string> files = GetChangedTemplateFiles(templateDirectory);
-			foreach (string file in files)
-			{
-				ReadTemplateFile(file);
-			}
-		}
-
-		private List<string> GetChangedTemplateFiles(string directory)
-		{
-			List<string> changedFiles = new List<string>();
-
-			try
-			{
-				string[] files = Directory.GetFiles(directory, "*.xml");
-
-				foreach (string file in files)
-				{
-					DateTime fileLastWrite = GetFileLastWriteTimestamp(file);
-
-					if (filesTimestamps.ContainsKey(file) && (filesTimestamps[file] != null))
-					{
-						if (fileLastWrite > filesTimestamps[file])
-						{
-							// file has changed:
-							changedFiles.Add(file);
-						}
-					}
-					else
-					{
-						changedFiles.Add(file);
-					}
+					changedFiles.Add(file);
 				}
 			}
-			catch
-			{}
-
-			return changedFiles;
+		}
+		catch
+		{
 		}
 
-		private DateTime GetFileLastWriteTimestamp(string file)
+		return changedFiles;
+	}
+
+	private static DateTime GetFileLastWriteTimestamp(string file)
+	{
+		try
 		{
-			try
-			{
-				return File.GetLastWriteTimeUtc(file);
-			}
-			catch
-			{
-				return DateTime.UtcNow;
-			}
+			return File.GetLastWriteTimeUtc(file);
 		}
-
-		private void ReadTemplateFile(string file)
+		catch
 		{
-			XMLAccess xmlProvider = new XMLAccess(file);
-			BinaryDataTemplate template = new BinaryDataTemplate("new template");
+			return DateTime.UtcNow;
+		}
+	}
 
-			if (template.ReadFromXML(xmlProvider))
-			{
-				templates[file] = template;
-				filesTimestamps[file] = DateTime.UtcNow;
-			}
-			else
-			{
-				templates[file] = null;
-				filesTimestamps[file] = null;
-			}
+	private void ReadTemplateFile(string file)
+	{
+		XMLAccess xmlProvider = new(file);
+		BinaryDataTemplate template = new("new template");
+
+		if (template.ReadFromXML(xmlProvider))
+		{
+			templates[file] = template;
+			filesTimestamps[file] = DateTime.UtcNow;
+		}
+		else
+		{
+			templates[file] = null;
+			filesTimestamps[file] = null;
 		}
 	}
 }

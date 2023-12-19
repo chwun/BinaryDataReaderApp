@@ -1,34 +1,28 @@
+using BinaryDataReaderApp.Models;
 using System.Windows;
 using System.Windows.Controls;
-using BinaryDataReaderApp.Models;
 
-namespace BinaryDataReaderApp.Controls
+namespace BinaryDataReaderApp.Controls;
+
+public class CustomTreeView : TreeView
 {
-    public class CustomTreeView : TreeView
-    {
-        public static readonly DependencyProperty SelectedTreeItemProperty = DependencyProperty.Register("SelectedTreeItem", typeof(BinaryPart), typeof(CustomTreeView),
-			new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-		
-		public BinaryPart SelectedTreeItem
-		{
-			get
-			{
-				return this.GetValue(SelectedTreeItemProperty) as BinaryPart;
-			}
-			set
-			{
-				this.SetValue(SelectedTreeItemProperty, value);
-			}
-		}
+	public static readonly DependencyProperty SelectedTreeItemProperty = DependencyProperty.Register("SelectedTreeItem", typeof(BinaryPart),
+		typeof(CustomTreeView),
+		new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-		public CustomTreeView()
-		{
-			SelectedItemChanged += OnSelectedItemChanged;
-		}
+	public CustomTreeView()
+	{
+		SelectedItemChanged += OnSelectedItemChanged;
+	}
 
-		private void OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-		{
-			SelectedTreeItem = e.NewValue as BinaryPart;
-		}
-    }
+	public BinaryPart SelectedTreeItem
+	{
+		get => GetValue(SelectedTreeItemProperty) as BinaryPart;
+		set => SetValue(SelectedTreeItemProperty, value);
+	}
+
+	private void OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+	{
+		SelectedTreeItem = e.NewValue as BinaryPart;
+	}
 }

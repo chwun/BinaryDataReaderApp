@@ -1,42 +1,35 @@
 using Microsoft.Extensions.Configuration;
 
-namespace BinaryDataReaderApp.Configuration
+namespace BinaryDataReaderApp.Configuration;
+
+public class AppSettings
 {
-    public class AppSettings
-    {
-        public const string Key_ShowHexDump = "ShowHexDump";
-        public const string Key_TemplateDirectory = "TemplateDirectory";
+	public const string Key_ShowHexDump = "ShowHexDump";
+	public const string Key_TemplateDirectory = "TemplateDirectory";
 
-        private static AppSettings instance;
+	private static AppSettings instance;
 
-        public static AppSettings Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new AppSettings();
-                }
+	private readonly IConfiguration configuration;
 
-                return instance;
-            }
-        }
+	public AppSettings()
+	{
+		configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json", true, true).Build();
+	}
 
-        private IConfiguration configuration;
+	public static AppSettings Instance
+	{
+		get
+		{
+			if (instance == null)
+			{
+				instance = new();
+			}
 
-        public AppSettings()
-        {
-            configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json", true, true).Build();
-        }
+			return instance;
+		}
+	}
 
-        public bool GetConfigValue_Bool(string key)
-        {
-            return bool.Parse(configuration[key]);
-        }
+	public bool GetConfigValue_Bool(string key) => bool.Parse(configuration[key]);
 
-        public string GetConfigValue_String(string key)
-        {
-            return configuration[key];
-        }
-    }
+	public string GetConfigValue_String(string key) => configuration[key];
 }

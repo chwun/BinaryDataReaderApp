@@ -1,59 +1,52 @@
-namespace BinaryDataReaderApp.Models
+namespace BinaryDataReaderApp.Models;
+
+/// <summary>
+/// Abstract base class for a part in a binary data template
+/// </summary>
+public abstract class BinaryPart : ModelBase
 {
+	private long id;
+	private string name;
+
 	/// <summary>
-	/// Abstract base class for a part in a binary data template
+	/// Creates new instance of BinaryPart with ID and name
 	/// </summary>
-	public abstract class BinaryPart : ModelBase
+	/// <param name="id">ID of this part</param>
+	/// <param name="name">Name of this part</param>
+	public BinaryPart(long id, string name)
 	{
-		private long id;
-		private string name;
+		ID = id;
+		Name = name;
+	}
 
-		/// <summary>
-		/// ID of this part
-		/// </summary>
-		public long ID
+	public BinaryPart()
+		: this(-1, "")
+	{
+	}
+
+	/// <summary>
+	/// ID of this part
+	/// </summary>
+	public long ID
+	{
+		get => id;
+		set
 		{
-			get
-			{
-				return id;
-			}
-			set
-			{
-				id = value;
-				OnPropertyChanged();
-			}
+			id = value;
+			OnPropertyChanged();
 		}
+	}
 
-		/// <summary>
-		/// Name of this part
-		/// </summary>
-		public string Name
+	/// <summary>
+	/// Name of this part
+	/// </summary>
+	public string Name
+	{
+		get => name;
+		set
 		{
-			get
-			{
-				return name;
-			}
-			set
-			{
-				name = value;
-				OnPropertyChanged();
-			}
-		}
-
-		/// <summary>
-		/// Creates new instance of BinaryPart with ID and name 
-		/// </summary>
-		/// <param name="id">ID of this part</param>
-		/// <param name="name">Name of this part</param>
-		public BinaryPart(long id, string name)
-		{
-			ID = id;
-			Name = name;
-		}
-
-		public BinaryPart()
-			: this(-1, "")
-		{
+			name = value;
+			OnPropertyChanged();
 		}
 	}
 }

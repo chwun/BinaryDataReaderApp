@@ -1,348 +1,336 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
 using BinaryDataReaderApp.Events;
 using BinaryDataReaderApp.Localization;
+using System.Collections.ObjectModel;
+using System.IO;
 
-namespace BinaryDataReaderApp.Models
+namespace BinaryDataReaderApp.Models;
+
+public class BinaryFile : ModelBase
 {
-    public class BinaryFile : ModelBase
-    {
-        private string binaryFile;
-        private BinaryDataTemplate template;
-        private List<HexDumpLine> hexDumpLines;
-        private ObservableCollection<BinaryPart> parts;
-        private string errors;
-        private bool hasErrors;
-        private string fileSizeText;
+	private readonly string binaryFile;
+	private string errors;
+	private string fileSizeText;
+	private bool hasErrors;
+	private List<HexDumpLine> hexDumpLines;
+	private ObservableCollection<BinaryPart> parts;
 
-        public List<HexDumpLine> HexDumpLines
-        {
-            get
-            {
-                return hexDumpLines;
-            }
-            private set
-            {
-                hexDumpLines = value;
-                OnPropertyChanged();
-            }
-        }
+	public BinaryFile(string binaryFile, BinaryDataTemplate template)
+	{
+		this.binaryFile = binaryFile;
+		Template = template;
+		Parts = new();
+	}
 
-        public ObservableCollection<BinaryPart> Parts
-        {
-            get
-            {
-                return parts;
-            }
-            private set
-            {
-                parts = value;
-                OnPropertyChanged();
-            }
-        }
+	public List<HexDumpLine> HexDumpLines
+	{
+		get => hexDumpLines;
+		private set
+		{
+			hexDumpLines = value;
+			OnPropertyChanged();
+		}
+	}
 
-        public string Errors
-        {
-            get
-            {
-                return errors;
-            }
-            private set
-            {
-                errors = value;
-                OnPropertyChanged();
-            }
-        }
+	public ObservableCollection<BinaryPart> Parts
+	{
+		get => parts;
+		private set
+		{
+			parts = value;
+			OnPropertyChanged();
+		}
+	}
 
-        public bool HasErrors
-        {
-            get
-            {
-                return hasErrors;
-            }
-            private set
-            {
-                hasErrors = value;
-                OnPropertyChanged();
-            }
-        }
+	public string Errors
+	{
+		get => errors;
+		private set
+		{
+			errors = value;
+			OnPropertyChanged();
+		}
+	}
 
-        public string FileSizeText
-        {
-            get
-            {
-                return fileSizeText;
-            }
-            private set
-            {
-                fileSizeText = value;
-                OnPropertyChanged();
-            }
-        }
+	public bool HasErrors
+	{
+		get => hasErrors;
+		private set
+		{
+			hasErrors = value;
+			OnPropertyChanged();
+		}
+	}
 
-        public BinaryDataTemplate Template { get => template; private set => template = value; }
+	public string FileSizeText
+	{
+		get => fileSizeText;
+		private set
+		{
+			fileSizeText = value;
+			OnPropertyChanged();
+		}
+	}
 
-        #region events
+	public BinaryDataTemplate Template { get; }
 
-        public delegate void HexDumpSelectionChangedEventHandler(object sender, HexDumpSelectionChangedEventArgs e);
+	public void Read()
+	{
+		ReadData();
+		CreateByteList();
+	}
 
-        public event HexDumpSelectionChangedEventHandler HexDumpSelectionChanged;
+	public void SetSelectionInHexDump(BinaryValue value)
+	{
+		// set selected state:
+		var hexBytes = HexDumpLines.SelectMany(x => x.HexBytes);
+		foreach (HexDumpByte hexByte in hexBytes)
+		{
+			if (hexByte.ByteOffset >= value.ByteOffset && hexByte.ByteOffset < value.ByteOffset + value.Length)
+			{
+				hexByte.IsSelected = true;
+			}
+			else
+			{
+				hexByte.IsSelected = false;
+			}
+		}
 
-        #endregion
+		// raise event:
+		HexDumpLine selectedHexDumpLine = HexDumpLines.Where(x => x.HexBytes.Any(b => b.IsSelected)).FirstOrDefault();
+		HexDumpSelectionChanged?.Invoke(
+			this,
+			new()
+			{
+				SelectedHexDumpLine = selectedHexDumpLine
+			});
+	}
 
-        public BinaryFile(string binaryFile, BinaryDataTemplate template)
-        {
-            this.binaryFile = binaryFile;
-            this.Template = template;
-            Parts = new ObservableCollection<BinaryPart>();
-        }
+	public BinaryValue FindValueByByteOffset(int byteOffset)
+	{
+		return FindPart(Parts, x => x is BinaryValue val && byteOffset >= val.ByteOffset && byteOffset < val.ByteOffset + val.Length) as BinaryValue;
+	}
 
-        public void Read()
-        {
-            ReadData();
-            CreateByteList();
-        }
+	private BinaryPart FindPart(IEnumerable<BinaryPart> parts, Func<BinaryPart, bool> condition)
+	{
+		foreach (BinaryPart part in parts)
+		{
+			if (part is BinaryValue)
+			{
+				if (condition(part))
+				{
+					return part;
+				}
+			}
+			else if (part is BinarySection section)
+			{
+				BinaryPart match = FindPart(section.Parts, condition);
+				if (match != null)
+				{
+					return match;
+				}
+			}
+		}
 
-        public void SetSelectionInHexDump(BinaryValue value)
-        {
-            // set selected state:
-            var hexBytes = HexDumpLines.SelectMany(x => x.HexBytes);
-            foreach (HexDumpByte hexByte in hexBytes)
-            {
-                if ((hexByte.ByteOffset >= value.ByteOffset) && (hexByte.ByteOffset < value.ByteOffset + value.Length))
-                {
-                    hexByte.IsSelected = true;
-                }
-                else
-                {
-                    hexByte.IsSelected = false;
-                }
-            }
+		return null;
+	}
 
-            // raise event:
-            HexDumpLine selectedHexDumpLine = HexDumpLines.Where(x => x.HexBytes.Any(b => b.IsSelected)).FirstOrDefault();
-            HexDumpSelectionChanged?.Invoke(
-                this,
-                new HexDumpSelectionChangedEventArgs()
-                {
-                    SelectedHexDumpLine = selectedHexDumpLine
-                });
-        }
+	private void ReadData()
+	{
+		var errorList = new List<string>();
 
-        public BinaryValue FindValueByByteOffset(int byteOffset)
-        {
-            return (FindPart(Parts, x => (x is BinaryValue val) && (byteOffset >= val.ByteOffset) && (byteOffset < val.ByteOffset + val.Length)) as BinaryValue);
-        }
+		try
+		{
+			using (BinaryReader reader = new(File.Open(binaryFile, FileMode.Open)))
+			{
+				var globalValueCache = new Dictionary<long, object>();
+				int byteOffset = 0;
 
-        private BinaryPart FindPart(IEnumerable<BinaryPart> parts, Func<BinaryPart, bool> condition)
-        {
-            foreach (BinaryPart part in parts)
-            {
-                if (part is BinaryValue)
-                {
-                    if (condition(part))
-                    {
-                        return part;
-                    }
-                }
-                else if (part is BinarySection section)
-                {
-                    var match = FindPart(section.Parts, condition);
-                    if (match != null)
-                    {
-                        return match;
-                    }
-                }
-            }
+				foreach (BinaryPart templatePart in Template.Parts)
+				{
+					ReadPart(templatePart, Parts, globalValueCache, ref byteOffset, errorList, reader);
+				}
 
-            return null;
-        }
+				if (reader.BaseStream.Position < reader.BaseStream.Length)
+				{
+					errorList.Add(TranslationManager.GetResourceText("BinaryFile_FileTooLongError"));
+				}
+			}
+		}
+		catch (EndOfStreamException)
+		{
+			errorList.Add(TranslationManager.GetResourceText("BinaryFile_EndOfStreamError"));
+		}
+		catch (Exception e)
+		{
+			errorList.Add(TranslationManager.GetResourceText("BinaryFile_Error") + $" (\"{e.Message}\")");
+		}
 
-        private void ReadData()
-        {
-            List<string> errorList = new List<string>();
+		Errors = string.Join(Environment.NewLine, errorList);
+		HasErrors = Errors.Length > 0;
+	}
 
-            try
-            {
-                using (BinaryReader reader = new BinaryReader(File.Open(binaryFile, FileMode.Open)))
-                {
-                    Dictionary<long, object> globalValueCache = new Dictionary<long, object>();
-                    int byteOffset = 0;
+	private void CreateByteList()
+	{
+		try
+		{
+			byte[] bytes = File.ReadAllBytes(binaryFile);
+			string hexString = BitConverter.ToString(bytes);
+			string[] hexValues = hexString.Split('-');
 
-                    foreach (BinaryPart templatePart in Template.Parts)
-                    {
-                        ReadPart(templatePart, Parts, globalValueCache, ref byteOffset, errorList, reader);
-                    }
+			HexDumpLines = new();
+			int byteOffset = 0;
+			HexDumpLine currentHexLine = null;
+			foreach (string hexByte in hexValues)
+			{
+				if (byteOffset % 16 == 0)
+				{
+					currentHexLine = new(byteOffset);
+					HexDumpLines.Add(currentHexLine);
+				}
 
-                    if (reader.BaseStream.Position < reader.BaseStream.Length)
-                    {
-                        errorList.Add(TranslationManager.Instance.GetResourceText("BinaryFile_FileTooLongError"));
-                    }
-                }
-            }
-            catch (EndOfStreamException)
-            {
-                errorList.Add(TranslationManager.Instance.GetResourceText("BinaryFile_EndOfStreamError"));
-            }
-            catch (Exception e)
-            {
-                errorList.Add(TranslationManager.Instance.GetResourceText("BinaryFile_Error") + $" (\"{e.Message}\")");
-            }
+				currentHexLine.HexBytes.Add(new(hexByte, byteOffset));
 
-            Errors = string.Join(Environment.NewLine, errorList);
-            HasErrors = Errors.Length > 0;
-        }
+				byteOffset++;
+			}
 
-        private void CreateByteList()
-        {
-            try
-            {
-                byte[] bytes = File.ReadAllBytes(binaryFile);
-                string hexString = BitConverter.ToString(bytes);
-                string[] hexValues = hexString.Split('-');
+			FileSizeText = $"{bytes.Length} B";
+		}
+		catch
+		{
+		}
+	}
 
-                HexDumpLines = new List<HexDumpLine>();
-                int byteOffset = 0;
-                HexDumpLine currentHexLine = null;
-                foreach (string hexByte in hexValues)
-                {
-                    if (byteOffset % 16 == 0)
-                    {
-                        currentHexLine = new HexDumpLine(byteOffset);
-                        HexDumpLines.Add(currentHexLine);
-                    }
+	private void ReadPart(BinaryPart templatePart, ObservableCollection<BinaryPart> partsList, Dictionary<long, object> globalValueCache,
+		ref int byteOffset, List<string> errorList, BinaryReader reader)
+	{
+		if (templatePart is BinarySection templateSection)
+		{
+			ReadSection(templateSection, partsList, globalValueCache, ref byteOffset, errorList, reader);
+		}
+		else if (templatePart is BinaryValue templateValue)
+		{
+			ReadValue(templateValue, partsList, globalValueCache, ref byteOffset, errorList, reader);
+		}
+	}
 
-                    currentHexLine.HexBytes.Add(new HexDumpByte(hexByte, byteOffset));
+	private void ReadSection(BinarySection templateSection, ObservableCollection<BinaryPart> partsList, Dictionary<long, object> globalValueCache,
+		ref int byteOffset, List<string> errorList, BinaryReader reader)
+	{
+		long numberOfLoops = 1;
+		LoopSettings loopSettings = templateSection.LoopSettings;
+		if (loopSettings != null)
+		{
+			if (loopSettings.Type == LoopType.FIXED)
+			{
+				numberOfLoops = loopSettings.LoopCountFixed;
+			}
+			else if (loopSettings.Type == LoopType.REFERENCE)
+			{
+				if (globalValueCache.TryGetValue(loopSettings.LoopCountReference, out object loopCountReference))
+				{
+					numberOfLoops = Convert.ToInt64(loopCountReference);
+				}
+			}
+		}
 
-                    byteOffset++;
-                }
+		for (int i = 0; i < numberOfLoops; i++)
+		{
+			string name = numberOfLoops > 1 ? $"{templateSection.Name} [{i}]" : templateSection.Name;
+			BinarySection binarySection = new(0, name);
 
-                FileSizeText = $"{bytes.Length} B";
-            }
-            catch
-            {
+			foreach (BinaryPart templatePart in templateSection.Parts)
+			{
+				ReadPart(templatePart, binarySection.Parts, globalValueCache, ref byteOffset, errorList, reader);
+			}
 
-            }
-        }
+			if (binarySection.Parts.Any())
+			{
+				partsList.Add(binarySection);
+			}
+		}
+	}
 
-        private void ReadPart(BinaryPart templatePart, ObservableCollection<BinaryPart> partsList, Dictionary<long, object> globalValueCache,
-            ref int byteOffset, List<string> errorList, BinaryReader reader)
-        {
-            if (templatePart is BinarySection templateSection)
-            {
-                ReadSection(templateSection, partsList, globalValueCache, ref byteOffset, errorList, reader);
-            }
-            else if (templatePart is BinaryValue templateValue)
-            {
-                ReadValue(templateValue, partsList, globalValueCache, ref byteOffset, errorList, reader);
-            }
-        }
+	private static void ReadValue(BinaryValue templateValue, ObservableCollection<BinaryPart> partsList, Dictionary<long, object> globalValueCache,
+		ref int byteOffset, List<string> errorList, BinaryReader reader)
+	{
+		BinaryValue binaryValue = new(0, templateValue.Name, templateValue.ValueType, templateValue.Converter);
+		binaryValue.ByteOffset = byteOffset;
 
-        private void ReadSection(BinarySection templateSection, ObservableCollection<BinaryPart> partsList, Dictionary<long, object> globalValueCache,
-            ref int byteOffset, List<string> errorList, BinaryReader reader)
-        {
-            long numberOfLoops = 1;
-            LoopSettings loopSettings = templateSection.LoopSettings;
-            if (loopSettings != null)
-            {
-                if (loopSettings.Type == LoopType.FIXED)
-                {
-                    numberOfLoops = loopSettings.LoopCountFixed;
-                }
-                else if (loopSettings.Type == LoopType.REFERENCE)
-                {
-                    if (globalValueCache.ContainsKey(loopSettings.LoopCountReference))
-                    {
-                        numberOfLoops = Convert.ToInt64(globalValueCache[loopSettings.LoopCountReference]);
-                    }
-                }
-            }
+		try
+		{
+			switch (templateValue.ValueType)
+			{
+				case BinaryValueType.BYTE:
+					binaryValue.Value = reader.ReadByte();
+					byteOffset += 1;
+					break;
 
-            for (int i = 0; i < numberOfLoops; i++)
-            {
-                string name = (numberOfLoops > 1) ? $"{templateSection.Name} [{i}]" : templateSection.Name;
-                BinarySection binarySection = new BinarySection(0, name);
+				case BinaryValueType.SHORT:
+					binaryValue.Value = reader.ReadInt16();
+					byteOffset += 2;
+					break;
 
-                foreach (BinaryPart templatePart in templateSection.Parts)
-                {
-                    ReadPart(templatePart, binarySection.Parts, globalValueCache, ref byteOffset, errorList, reader);
-                }
+				case BinaryValueType.USHORT:
+					binaryValue.Value = reader.ReadUInt16();
+					byteOffset += 2;
+					break;
 
-                if (binarySection.Parts.Any())
-                {
-                    partsList.Add(binarySection);
-                }
-            }
-        }
+				case BinaryValueType.INT:
+					binaryValue.Value = reader.ReadInt32();
+					byteOffset += 4;
+					break;
 
-        private void ReadValue(BinaryValue templateValue, ObservableCollection<BinaryPart> partsList, Dictionary<long, object> globalValueCache,
-            ref int byteOffset, List<string> errorList, BinaryReader reader)
-        {
-            BinaryValue binaryValue = new BinaryValue(0, templateValue.Name, templateValue.ValueType, templateValue.Converter);
-            binaryValue.ByteOffset = byteOffset;
+				case BinaryValueType.UINT:
+					binaryValue.Value = reader.ReadUInt32();
+					byteOffset += 4;
+					break;
 
-            try
-            {
-                switch (templateValue.ValueType)
-                {
-                    case BinaryValueType.BYTE:
-                        binaryValue.Value = reader.ReadByte();
-                        byteOffset += 1;
-                        break;
-                    case BinaryValueType.SHORT:
-                        binaryValue.Value = reader.ReadInt16();
-                        byteOffset += 2;
-                        break;
-                    case BinaryValueType.USHORT:
-                        binaryValue.Value = reader.ReadUInt16();
-                        byteOffset += 2;
-                        break;
-                    case BinaryValueType.INT:
-                        binaryValue.Value = reader.ReadInt32();
-                        byteOffset += 4;
-                        break;
-                    case BinaryValueType.UINT:
-                        binaryValue.Value = reader.ReadUInt32();
-                        byteOffset += 4;
-                        break;
-                    case BinaryValueType.LONG:
-                        binaryValue.Value = reader.ReadInt64();
-                        byteOffset += 8;
-                        break;
-                    case BinaryValueType.ULONG:
-                        binaryValue.Value = reader.ReadUInt64();
-                        byteOffset += 8;
-                        break;
-                    case BinaryValueType.BOOL:
-                        binaryValue.Value = reader.ReadBoolean();
-                        byteOffset += 1;
-                        break;
-                    case BinaryValueType.FLOAT:
-                        binaryValue.Value = reader.ReadSingle();
-                        byteOffset += 4;
-                        break;
-                    case BinaryValueType.DOUBLE:
-                        binaryValue.Value = reader.ReadDouble();
-                        byteOffset += 8;
-                        break;
-                    default:
-                        binaryValue = BinaryValue.CreateErrorValue(templateValue.Name, templateValue.ValueType);
-                        break;
-                }
-            }
-            catch (Exception e)
-            {
-                binaryValue = BinaryValue.CreateErrorValue(templateValue.Name, templateValue.ValueType);
-                errorList.Add(TranslationManager.Instance.GetResourceText("BinaryFile_ValueError") + $" \"{e.Message}\"s");
-            }
+				case BinaryValueType.LONG:
+					binaryValue.Value = reader.ReadInt64();
+					byteOffset += 8;
+					break;
 
-            binaryValue.Length = BinaryValueTypeHelper.GetLength(binaryValue.ValueType);
-            globalValueCache[templateValue.ID] = binaryValue.Value;
-            partsList.Add(binaryValue);
-        }
-    }
+				case BinaryValueType.ULONG:
+					binaryValue.Value = reader.ReadUInt64();
+					byteOffset += 8;
+					break;
+
+				case BinaryValueType.BOOL:
+					binaryValue.Value = reader.ReadBoolean();
+					byteOffset += 1;
+					break;
+
+				case BinaryValueType.FLOAT:
+					binaryValue.Value = reader.ReadSingle();
+					byteOffset += 4;
+					break;
+
+				case BinaryValueType.DOUBLE:
+					binaryValue.Value = reader.ReadDouble();
+					byteOffset += 8;
+					break;
+
+				default:
+					binaryValue = BinaryValue.CreateErrorValue(templateValue.Name, templateValue.ValueType);
+					break;
+			}
+		}
+		catch (Exception e)
+		{
+			binaryValue = BinaryValue.CreateErrorValue(templateValue.Name, templateValue.ValueType);
+			errorList.Add(TranslationManager.GetResourceText("BinaryFile_ValueError") + $" \"{e.Message}\"s");
+		}
+
+		binaryValue.Length = BinaryValueTypeHelper.GetLength(binaryValue.ValueType);
+		globalValueCache[templateValue.ID] = binaryValue.Value;
+		partsList.Add(binaryValue);
+	}
+
+	#region events
+
+	public delegate void HexDumpSelectionChangedEventHandler(object sender, HexDumpSelectionChangedEventArgs e);
+
+	public event HexDumpSelectionChangedEventHandler HexDumpSelectionChanged;
+
+	#endregion events
 }
