@@ -12,7 +12,7 @@ public class BinaryFile : ModelBase
 	private string fileSizeText;
 	private bool hasErrors;
 	private List<HexDumpLine> hexDumpLines;
-	private ObservableCollection<BinaryPart> parts;
+	private readonly ObservableCollection<BinaryPart> parts;
 
 	public BinaryFile(string binaryFile, BinaryDataTemplate template)
 	{

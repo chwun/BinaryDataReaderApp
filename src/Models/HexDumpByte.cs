@@ -5,7 +5,7 @@ namespace BinaryDataReaderApp.Models;
 public class HexDumpByte : ModelBase
 {
 	public static HexDumpByte UnusedByte = new("--", 0);
-	private int byteOffset;
+	private readonly int byteOffset;
 	private bool isSelected;
 	private string text;
 
