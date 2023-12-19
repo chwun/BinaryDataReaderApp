@@ -1,5 +1,3 @@
-using System;
-
 namespace BinaryDataReaderApp.Models;
 
 public static class BinaryValueTypeExtensions

@@ -2,8 +2,8 @@ namespace BinaryDataReaderApp.Models;
 
 public class HexDumpLine : ModelBase
 {
-	private int byteOffset;
 	private readonly List<HexDumpByte> hexBytes;
+	private int byteOffset;
 
 	public HexDumpLine(int byteOffset)
 	{
