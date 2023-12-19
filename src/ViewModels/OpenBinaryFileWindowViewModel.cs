@@ -68,8 +68,4 @@ public class OpenBinaryFileWindowViewModel : ViewModelBase
 	}
 
 	#endregion command handlers
-
-	#region private methods
-
-	#endregion private methods
 }

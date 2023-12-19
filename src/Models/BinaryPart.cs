@@ -13,13 +13,13 @@ public abstract class BinaryPart : ModelBase
 	/// </summary>
 	/// <param name="id">ID of this part</param>
 	/// <param name="name">Name of this part</param>
-	public BinaryPart(long id, string name)
+	protected BinaryPart(long id, string name)
 	{
 		ID = id;
 		Name = name;
 	}
 
-	public BinaryPart()
+	protected BinaryPart()
 		: this(-1, "")
 	{
 	}

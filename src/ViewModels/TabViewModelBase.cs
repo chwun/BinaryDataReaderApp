@@ -4,7 +4,7 @@ public abstract class TabViewModelBase : ViewModelBase
 {
 	protected string header;
 
-	public TabViewModelBase(string header)
+	protected TabViewModelBase(string header)
 	{
 		Header = header;
 	}

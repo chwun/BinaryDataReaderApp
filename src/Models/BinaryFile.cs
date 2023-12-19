@@ -34,7 +34,7 @@ public class BinaryFile : ModelBase
 	public ObservableCollection<BinaryPart> Parts
 	{
 		get => parts;
-		private set
+		private init
 		{
 			parts = value;
 			OnPropertyChanged();
@@ -96,7 +96,7 @@ public class BinaryFile : ModelBase
 		}
 
 		// raise event:
-		HexDumpLine selectedHexDumpLine = HexDumpLines.Where(x => x.HexBytes.Any(b => b.IsSelected)).FirstOrDefault();
+		HexDumpLine selectedHexDumpLine = HexDumpLines.FirstOrDefault(x => x.HexBytes.Any(b => b.IsSelected));
 		HexDumpSelectionChanged?.Invoke(
 			this,
 			new()
@@ -110,7 +110,7 @@ public class BinaryFile : ModelBase
 		return FindPart(Parts, x => x is BinaryValue val && byteOffset >= val.ByteOffset && byteOffset < val.ByteOffset + val.Length) as BinaryValue;
 	}
 
-	private BinaryPart FindPart(IEnumerable<BinaryPart> parts, Func<BinaryPart, bool> condition)
+	private static BinaryPart FindPart(IEnumerable<BinaryPart> parts, Func<BinaryPart, bool> condition)
 	{
 		foreach (BinaryPart part in parts)
 		{
@@ -140,20 +140,18 @@ public class BinaryFile : ModelBase
 
 		try
 		{
-			using (BinaryReader reader = new(File.Open(binaryFile, FileMode.Open)))
+			using BinaryReader reader = new(File.Open(binaryFile, FileMode.Open));
+			var globalValueCache = new Dictionary<long, object>();
+			int byteOffset = 0;
+
+			foreach (BinaryPart templatePart in Template.Parts)
 			{
-				var globalValueCache = new Dictionary<long, object>();
-				int byteOffset = 0;
+				ReadPart(templatePart, Parts, globalValueCache, ref byteOffset, errorList, reader);
+			}
 
-				foreach (BinaryPart templatePart in Template.Parts)
-				{
-					ReadPart(templatePart, Parts, globalValueCache, ref byteOffset, errorList, reader);
-				}
-
-				if (reader.BaseStream.Position < reader.BaseStream.Length)
-				{
-					errorList.Add(TranslationManager.GetResourceText("BinaryFile_FileTooLongError"));
-				}
+			if (reader.BaseStream.Position < reader.BaseStream.Length)
+			{
+				errorList.Add(TranslationManager.GetResourceText("BinaryFile_FileTooLongError"));
 			}
 		}
 		catch (EndOfStreamException)

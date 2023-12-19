@@ -9,14 +9,13 @@ public class BinaryValue : BinaryPart
 	private object value;
 	private BinaryValueType valueType;
 
-	// <summary>
+	/// <summary>
 	/// Creates new instance of BinaryValue with ID and name
 	/// </summary>
 	/// <param name="id">ID of this value</param>
 	/// <param name="name">name of this value</param>
 	/// <param name="valueType">type of this value</param>
 	/// <param name="converter">converter (optional)</param>
-	/// /
 	public BinaryValue(long id, string name, BinaryValueType valueType, IntToStringConverter converter)
 		: base(id, name)
 	{

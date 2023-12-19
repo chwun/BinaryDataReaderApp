@@ -24,7 +24,7 @@ public class HexDumpLine : ModelBase
 	public List<HexDumpByte> HexBytes
 	{
 		get => hexBytes;
-		private set
+		private init
 		{
 			hexBytes = value;
 			OnPropertyChanged();

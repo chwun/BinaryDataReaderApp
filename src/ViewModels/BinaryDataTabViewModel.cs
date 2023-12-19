@@ -76,8 +76,7 @@ public class BinaryDataTabViewModel : TabViewModelBase
 	{
 		// TODO: Auswahl im Tree funktioniert noch nicht!
 
-		HexDumpLine selectedHexDumpLine = selectedHexDumpRowItem as HexDumpLine;
-		if (selectedHexDumpLine != null)
+		if (selectedHexDumpRowItem is HexDumpLine selectedHexDumpLine)
 		{
 			int byteOffset = selectedHexDumpLine.ByteOffset;
 			byteOffset += Math.Max(selectedHexDumpColumnIndex - 1, 0);

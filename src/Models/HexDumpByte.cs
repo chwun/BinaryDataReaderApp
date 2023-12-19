@@ -29,7 +29,7 @@ public class HexDumpByte : ModelBase
 	public int ByteOffset
 	{
 		get => byteOffset;
-		private set
+		private init
 		{
 			byteOffset = value;
 			OnPropertyChanged();

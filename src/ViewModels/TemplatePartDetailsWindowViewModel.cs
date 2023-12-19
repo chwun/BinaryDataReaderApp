@@ -99,18 +99,7 @@ public class TemplatePartDetailsWindowViewModel : ViewModelBase
 
 	private ICommand okCommand;
 
-	public ICommand OkCommand
-	{
-		get
-		{
-			if (okCommand == null)
-			{
-				okCommand = new ActionCommand(OkCommand_Executed, OkCommand_CanExecute);
-			}
-
-			return okCommand;
-		}
-	}
+	public ICommand OkCommand => okCommand ??= new ActionCommand(OkCommand_Executed, OkCommand_CanExecute);
 
 	#endregion commands
 
@@ -142,8 +131,4 @@ public class TemplatePartDetailsWindowViewModel : ViewModelBase
 	}
 
 	#endregion command handlers
-
-	#region private methods
-
-	#endregion private methods
 }

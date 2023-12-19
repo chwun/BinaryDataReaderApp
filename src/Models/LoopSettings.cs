@@ -19,18 +19,20 @@ public class LoopSettings : ModelBase
 		{
 			type = value;
 
-			if (type == LoopType.NONE)
+			switch (type)
 			{
-				LoopCountReference = 0;
-				LoopCountFixed = 0;
-			}
-			else if (type == LoopType.FIXED)
-			{
-				LoopCountReference = 0;
-			}
-			else if (type == LoopType.REFERENCE)
-			{
-				LoopCountFixed = 0;
+				case LoopType.NONE:
+					LoopCountReference = 0;
+					LoopCountFixed = 0;
+					break;
+
+				case LoopType.FIXED:
+					LoopCountReference = 0;
+					break;
+
+				case LoopType.REFERENCE:
+					LoopCountFixed = 0;
+					break;
 			}
 
 			OnPropertyChanged();
