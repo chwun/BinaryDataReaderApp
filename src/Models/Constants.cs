@@ -20,4 +20,5 @@ public static class Constants
 	public const string TemplateXML_LoopType = "LoopType";
 	public const string TemplateXML_LoopCountReference = "LoopCountReference";
 	public const string TemplateXML_LoopCount = "LoopCount";
+	public const string TemplateXML_Length = "Length";
 }

@@ -11,5 +11,7 @@ public enum BinaryValueType
 	ULONG,
 	BOOL,
 	FLOAT,
-	DOUBLE
+	DOUBLE,
+	STRING,
+	BLOB
 }

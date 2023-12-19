@@ -136,6 +136,11 @@ public class BinaryDataTemplate : ModelBase
 		xmlValue.Add(new XAttribute(Constants.TemplateXML_Name, value.Name));
 		xmlValue.Add(new XAttribute(Constants.TemplateXML_Type, value.ValueType.ToString()));
 
+		if (value.Length > 0)
+		{
+			xmlValue.Add(new XAttribute(Constants.TemplateXML_Length, value.Length));
+		}
+
 		if (value.Converter != null)
 		{
 			xmlValue.Add(new XAttribute(Constants.TemplateXML_Converter, value.Converter.Name));
@@ -336,11 +341,11 @@ public class BinaryDataTemplate : ModelBase
 		string name = element.Attribute(Constants.TemplateXML_Name).Value;
 		string type = element.Attribute(Constants.TemplateXML_Type).Value.ToLower();
 		string converterName = element.Attribute(Constants.TemplateXML_Converter)?.Value ?? "";
-		IntToStringConverter converter =
-			!string.IsNullOrWhiteSpace(converterName) ? converters.FirstOrDefault(x => x.Name == converterName) : null;
+		IntToStringConverter converter = !string.IsNullOrWhiteSpace(converterName) ? converters.FirstOrDefault(x => x.Name == converterName) : null;
 
 		BinaryValueType valueType = (BinaryValueType)Enum.Parse(typeof(BinaryValueType), type, true);
-		BinaryValue binaryValue = new(id, name, valueType, converter);
+		int length = int.Parse(element.Attribute(Constants.TemplateXML_Length)?.Value ?? "0");
+		BinaryValue binaryValue = new(id, name, valueType, length, converter);
 		partsList.Add(binaryValue);
 	}
 }

@@ -5,7 +5,6 @@ namespace BinaryDataReaderApp.Models;
 public class BinaryValue : BinaryPart
 {
 	private int byteOffset;
-	private int length;
 	private object value;
 	private BinaryValueType valueType;
 
@@ -16,10 +15,11 @@ public class BinaryValue : BinaryPart
 	/// <param name="name">name of this value</param>
 	/// <param name="valueType">type of this value</param>
 	/// <param name="converter">converter (optional)</param>
-	public BinaryValue(long id, string name, BinaryValueType valueType, IntToStringConverter converter)
+	public BinaryValue(long id, string name, BinaryValueType valueType, int length, IntToStringConverter converter)
 		: base(id, name)
 	{
 		ValueType = valueType;
+		Length = length;
 		HasError = false;
 		Converter = converter;
 	}
@@ -45,26 +45,7 @@ public class BinaryValue : BinaryPart
 		}
 	}
 
-	public string ValueText
-	{
-		get
-		{
-			if (Converter != null)
-			{
-				try
-				{
-					string convertedText = Converter.GetText(Convert.ToInt32(Value));
-					return $"{convertedText} ({Value})";
-				}
-				catch
-				{
-					return Value.ToString();
-				}
-			}
-
-			return Value.ToString();
-		}
-	}
+	public string ValueText => this.GetValueText();
 
 	public int ByteOffset
 	{
@@ -77,15 +58,7 @@ public class BinaryValue : BinaryPart
 		}
 	}
 
-	public int Length
-	{
-		get => length;
-		set
-		{
-			length = value;
-			OnPropertyChanged();
-		}
-	}
+	public int Length { get; }
 
 	public bool HasError
 	{
@@ -107,7 +80,7 @@ public class BinaryValue : BinaryPart
 
 	public IntToStringConverter Converter { get; }
 
-	public static BinaryValue CreateErrorValue(string name, BinaryValueType valueType) => new(0, name, valueType, null)
+	public static BinaryValue CreateErrorValue(string name, BinaryValueType valueType, int length) => new(0, name, valueType, length, null)
 	{
 		HasError = true
 	};

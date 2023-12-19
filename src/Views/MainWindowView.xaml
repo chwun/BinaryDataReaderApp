@@ -6,7 +6,7 @@
         xmlns:views="clr-namespace:BinaryDataReaderApp.Views" WindowStartupLocation="CenterScreen"
         xmlns:common="clr-namespace:BinaryDataReaderApp.Common" mc:Ignorable="d" AllowDrop="True"
         DragEnter="Window_DragEnter" Drop="Window_Drop" Background="{DynamicResource WindowColorBrush}"
-        Title="BinaryDataReader - v00.06" Height="450" Width="800" MinHeight="500" MinWidth="500">
+        Title="BinaryDataReader - v00.07" Height="450" Width="800" MinHeight="500" MinWidth="500">
 
     <Window.Resources>
         <ResourceDictionary>

@@ -2,17 +2,18 @@ using BinaryDataReaderApp.Events;
 using BinaryDataReaderApp.Localization;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Text;
 
 namespace BinaryDataReaderApp.Models;
 
 public class BinaryFile : ModelBase
 {
 	private readonly string binaryFile;
+	private readonly ObservableCollection<BinaryPart> parts;
 	private string errors;
 	private string fileSizeText;
 	private bool hasErrors;
 	private List<HexDumpLine> hexDumpLines;
-	private readonly ObservableCollection<BinaryPart> parts;
 
 	public BinaryFile(string binaryFile, BinaryDataTemplate template)
 	{
@@ -85,7 +86,7 @@ public class BinaryFile : ModelBase
 		var hexBytes = HexDumpLines.SelectMany(x => x.HexBytes);
 		foreach (HexDumpByte hexByte in hexBytes)
 		{
-			if (hexByte.ByteOffset >= value.ByteOffset && hexByte.ByteOffset < value.ByteOffset + value.Length)
+			if (hexByte.ByteOffset >= value.ByteOffset && hexByte.ByteOffset < value.ByteOffset + value.GetByteSize())
 			{
 				hexByte.IsSelected = true;
 			}
@@ -107,7 +108,8 @@ public class BinaryFile : ModelBase
 
 	public BinaryValue FindValueByByteOffset(int byteOffset)
 	{
-		return FindPart(Parts, x => x is BinaryValue val && byteOffset >= val.ByteOffset && byteOffset < val.ByteOffset + val.Length) as BinaryValue;
+		return FindPart(Parts, x => x is BinaryValue val && byteOffset >= val.ByteOffset && byteOffset < val.ByteOffset + val.GetByteSize()) as
+			BinaryValue;
 	}
 
 	private static BinaryPart FindPart(IEnumerable<BinaryPart> parts, Func<BinaryPart, bool> condition)
@@ -251,7 +253,7 @@ public class BinaryFile : ModelBase
 	private static void ReadValue(BinaryValue templateValue, ObservableCollection<BinaryPart> partsList, Dictionary<long, object> globalValueCache,
 		ref int byteOffset, List<string> errorList, BinaryReader reader)
 	{
-		BinaryValue binaryValue = new(0, templateValue.Name, templateValue.ValueType, templateValue.Converter);
+		BinaryValue binaryValue = new(0, templateValue.Name, templateValue.ValueType, templateValue.Length, templateValue.Converter);
 		binaryValue.ByteOffset = byteOffset;
 
 		try
@@ -260,66 +262,65 @@ public class BinaryFile : ModelBase
 			{
 				case BinaryValueType.BYTE:
 					binaryValue.Value = reader.ReadByte();
-					byteOffset += 1;
 					break;
 
 				case BinaryValueType.SHORT:
 					binaryValue.Value = reader.ReadInt16();
-					byteOffset += 2;
 					break;
 
 				case BinaryValueType.USHORT:
 					binaryValue.Value = reader.ReadUInt16();
-					byteOffset += 2;
 					break;
 
 				case BinaryValueType.INT:
 					binaryValue.Value = reader.ReadInt32();
-					byteOffset += 4;
 					break;
 
 				case BinaryValueType.UINT:
 					binaryValue.Value = reader.ReadUInt32();
-					byteOffset += 4;
 					break;
 
 				case BinaryValueType.LONG:
 					binaryValue.Value = reader.ReadInt64();
-					byteOffset += 8;
 					break;
 
 				case BinaryValueType.ULONG:
 					binaryValue.Value = reader.ReadUInt64();
-					byteOffset += 8;
 					break;
 
 				case BinaryValueType.BOOL:
 					binaryValue.Value = reader.ReadBoolean();
-					byteOffset += 1;
 					break;
 
 				case BinaryValueType.FLOAT:
 					binaryValue.Value = reader.ReadSingle();
-					byteOffset += 4;
 					break;
 
 				case BinaryValueType.DOUBLE:
 					binaryValue.Value = reader.ReadDouble();
-					byteOffset += 8;
+					break;
+
+				case BinaryValueType.STRING:
+					binaryValue.Value = Encoding.UTF8.GetString(reader.ReadBytes(templateValue.Length).TakeWhile(x => x != 0).ToArray());
+					break;
+
+				case BinaryValueType.BLOB:
+					binaryValue.Value = reader.ReadBytes(templateValue.Length);
 					break;
 
 				default:
-					binaryValue = BinaryValue.CreateErrorValue(templateValue.Name, templateValue.ValueType);
+					binaryValue = BinaryValue.CreateErrorValue(templateValue.Name, templateValue.ValueType, templateValue.Length);
 					break;
 			}
+
+			byteOffset += binaryValue.GetByteSize();
 		}
 		catch (Exception e)
 		{
-			binaryValue = BinaryValue.CreateErrorValue(templateValue.Name, templateValue.ValueType);
+			binaryValue = BinaryValue.CreateErrorValue(templateValue.Name, templateValue.ValueType, templateValue.Length);
 			errorList.Add(TranslationManager.GetResourceText("BinaryFile_ValueError") + $" \"{e.Message}\"s");
 		}
 
-		binaryValue.Length = BinaryValueTypeHelper.GetLength(binaryValue.ValueType);
 		globalValueCache[templateValue.ID] = binaryValue.Value;
 		partsList.Add(binaryValue);
 	}
